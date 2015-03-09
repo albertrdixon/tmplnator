@@ -1,0 +1,17 @@
+{
+	"ImportPath": "github.com/albertrdixon/tmplnator",
+	"GoVersion": "go1.4.1",
+	"Packages": [
+		"./..."
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/golang/glog",
+			"Rev": "44145f04b68cf362d9c4df2182967c2275eaefed"
+		},
+		{
+			"ImportPath": "github.com/oxtoacart/bpool",
+			"Rev": "923fab21d0624a469b877a05bbfc562c1c26c663"
+		}
+	]
+}
