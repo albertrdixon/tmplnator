@@ -3,7 +3,7 @@ EXECUTABLE = "t2"
 LDFLAGS = "-X $(PROJECT)/version.Build $$(git rev-parse --short HEAD) -s"
 BINARY = "cmd/t2/t2.go"
 TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
-PLATFORM = "$$(tr '[A-Z]' '[a-z]' <<< "$$(uname)")"
+PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
 VERSION = "$$(./t2 -version)"
 
 .PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
