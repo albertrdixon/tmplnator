@@ -1,6 +1,7 @@
 language: go
 go: 1.4.1
 install: go get github.com/tools/godep
+after_success: make build
 deploy:
   provider: releases
   api_key:
