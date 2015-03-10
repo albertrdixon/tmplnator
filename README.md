@@ -7,7 +7,7 @@ Yet another file generator using golang [text/template](http://golang.org/pkg/te
 
 I wanted something were I could put all my application configuration templates in a single folder within my [docker](https://www.docker.com/) images, then run a single command to have them processed and placed without a ton of extra configuration.
 
-Enter tmplnator. Templates describe where they should go, what their file mode should be and what user and group should own them. I'm sure this will not be fore everyone, like I said, I made this for me.
+Enter tmplnator. Templates describe where they should go, what their file mode should be and what user and group should own them. I'm sure this will not be for everyone, like I said, I made this for me.
 
 ## Install
 
