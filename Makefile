@@ -44,13 +44,11 @@ lint:
 	golint ./...
 
 build:
-	go fmt ./...
 	godep go build -ldflags $(LDFLAGS) $(BINARY)
 
 install:
-	go fmt ./...
 	godep go install -ldflags $(LDFLAGS) $(BINARIES)
 
 clean:
 	go clean ./...
-	rm -rf tnator
+	rm -rf t2
