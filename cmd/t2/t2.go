@@ -17,7 +17,7 @@ func exitErr(err error) {
 
 func main() {
   var (
-    V       = flag.Bool("version", false, "Print version")
+    V       = flag.Bool("v", false, "Print version")
     src     = flag.String("td", "", "template dir to render")
     del     = flag.Bool("d", false, "Remove templates after processing")
     pre     = flag.String("P", "", "Dir prefix")

@@ -16,7 +16,3 @@ deploy:
   on:
     repo: albertrdixon/tmplnator
     tags: true
-
-matrix:
-  allow_failures:
-    - os: osx
