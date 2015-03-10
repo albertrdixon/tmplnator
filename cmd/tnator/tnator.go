@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"github.com/albertrdixon/tmplnator/template"
 	"github.com/albertrdixon/tmplnator/version"
-	"github.com/golang/glog"
 	"io/ioutil"
 	"os"
 	"sync"
@@ -50,25 +49,20 @@ func main() {
 		fmt.Println(pre)
 	}
 
-	fmt.Printf("Test %q", s)
-	glog.Infof("Preparing to parse templates under %q", s)
+	fmt.Printf("==> Parsing Templates in %q\n", s)
 	tStack, err := template.ParseDirectory(s, p)
 	if err != nil {
 		fmt.Printf("Failed to parse templates.")
 		exitErr(err)
 	}
 
-	fmt.Printf("Template Stack: %v\n", tStack)
-
 	var wg sync.WaitGroup
 	wg.Add(*threads)
 	for i := 0; i < *threads; i++ {
 		go func() {
 			defer wg.Done()
-			fmt.Printf("In goroutine, len(template) = %v\n", tStack.Len())
 			for tStack.Len() > 0 {
 				if t, ok := tStack.Pop().(*template.Template); ok {
-					fmt.Printf("==> Generating file from %q\n", t.Src)
 					if err := t.Write(); err == nil {
 						if *del {
 							os.Remove(t.Src)

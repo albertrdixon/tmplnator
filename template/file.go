@@ -18,6 +18,14 @@ func (f *File) Destination() string {
 	return filepath.Join(f.Prefix, f.Path, f.Name)
 }
 
+func (f *File) DestinationDir() string {
+	return filepath.Join(f.Prefix, f.Path)
+}
+
+func GetDestination(t *Template) string {
+	return files[t.Sha1].Destination()
+}
+
 func newFile(pre string, name string) *File {
 	if pre == "" {
 		pre = "/"
