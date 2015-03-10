@@ -1,6 +1,7 @@
 language: go
-go: 1.4
-install: make dep-restore
+go: 
+  - 1.4
+  - tip
 deploy:
   provider: releases
   api_key:
