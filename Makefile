@@ -4,7 +4,7 @@ LDFLAGS = "-X $(PROJECT)/version.Build $$(git rev-parse --short HEAD) -s"
 BINARY = "cmd/t2/t2.go"
 TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
 PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
-VERSION = "$$(./t2 -version)"
+VERSION = "$$(./t2 -v)"
 
 .PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
 
