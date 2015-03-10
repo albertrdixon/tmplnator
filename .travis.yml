@@ -1,3 +1,11 @@
 language: go
-go:
-  - 1.4
+go: 1.4
+install: make dep-restore
+deploy:
+  provider: releases
+  api_key:
+    secure: gE+O8G3DK0jhYc7lIIz9wlRLSZTXau7WdWz3dQqG/DAPvkJbjcGAjA3WmW81KcEs4Ob0ODIdChSGJY5+px/w0aFTdAAP27NvoPRwute2VcLRevpjCglroqz3girj3KUVJmACtya4h/nJZ3Eo20/6/lTJTE6y6W9dVhbwx1DpKlM=
+  file: t2
+  on:
+    repo: albertrdixon/tmplnator
+    tags: true
