@@ -39,11 +39,13 @@ func (t Template) Write() error {
   if err := os.MkdirAll(file.DestinationDir(), 0755); err != nil {
     return err
   }
-  f, err := os.OpenFile(file.Destination(), os.O_WRONLY|os.O_TRUNC|os.O_CREATE, os.FileMode(file.Mode))
+  f, err := os.OpenFile(file.Destination(), os.O_WRONLY|os.O_TRUNC|os.O_CREATE, file.Mode)
   if err != nil {
     return err
   }
   defer f.Close()
+
+  os.Chown(file.Destination(), file.User, file.Group)
   _, err = f.Write(b.Bytes())
   if err != nil {
     return err
