@@ -1,7 +1,10 @@
 PROJECT = github.com/albertrdixon/tmplnator
+EXECUTABLE = "t2"
 LDFLAGS = "-X $(PROJECT)/version.Build $$(git rev-parse --short HEAD) -s"
 BINARY = "cmd/t2/t2.go"
 TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
+PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
+VERSION = "$$(./t2 -v)"
 
 .PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
 
@@ -29,10 +32,14 @@ dep-restore:
 	godep restore
 
 test:
-	$(TEST_COMMAND) ./...
+	@echo "==> Running all tests"
+	@echo ""
+	@$(TEST_COMMAND) ./...
 
 test-verbose:
-	$(TEST_COMMAND) -test.v ./...
+	@echo "==> Running all tests (verbose output)"
+	@ echo ""
+	@$(TEST_COMMAND) -test.v ./...
 
 test-integration:
 	$(TEST_COMMAND) ./... -tags integration
@@ -44,10 +51,16 @@ lint:
 	golint ./...
 
 build:
-	godep go build -ldflags $(LDFLAGS) $(BINARY)
+	@echo "==> Building $(EXECUTABLE) with ldflags '$(LDFLAGS)'"
+	@godep go build -ldflags $(LDFLAGS) $(BINARY)
 
 install:
-	godep go install -ldflags $(LDFLAGS) $(BINARIES)
+	@echo "==> Installing $(EXECUTABLE) with ldflags $(LDFLAGS)"
+	@godep go install -ldflags $(LDFLAGS) $(BINARIES)
+
+package: build
+	@echo "==> Tar'ing up the binary"
+	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64-$(shell ./t2 -version).tar.gz t2
 
 clean:
 	go clean ./...
