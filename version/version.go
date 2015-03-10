@@ -5,7 +5,7 @@ import (
 )
 
 const (
-  CodeVersion = "v0.0.3"
+  CodeVersion = "v0.0.4"
 )
 
 var Build string
