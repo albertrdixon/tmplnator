@@ -1,5 +1,7 @@
 # tmplnator
 
+[![Build Status](https://travis-ci.org/albertrdixon/tmplnator.svg?branch=master)](https://travis-ci.org/albertrdixon/tmplnator)
+
 ~~A killing machine sent from the future~~ 
 Yet another file generator using golang [text/template](http://golang.org/pkg/text/template/).
 
