@@ -1,7 +1,7 @@
 PROJECT = github.com/albertrdixon/tmplnator
 LDFLAGS = "-X $(PROJECT)/version.Build $$(git rev-parse --short HEAD) -s"
 BINARY = "cmd/tnator/tnator.go"
-TEST_COMMAND = SPUDGUN_DIR=$(shell pwd)/fixtures godep go test
+TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
 
 .PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
 
