@@ -1,6 +1,6 @@
 os: linux
 language: go
-go: 1.4.1
+go: 1.4.2
 
 install: go get github.com/tools/godep
 script: make test-verbose

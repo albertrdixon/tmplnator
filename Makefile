@@ -62,7 +62,7 @@ install:
 
 package: build
 	@echo "==> Tar'ing up the binary"
-	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64-$(VERSION).tar.gz t2
+	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64.tar.gz t2
 
 clean:
 	go clean ./...
