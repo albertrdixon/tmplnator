@@ -45,7 +45,7 @@ func TestParseFile(t *testing.T) {
     fh.Close()
 
     st := stack.NewStack()
-    err = parseFile(fp, st)
+    err = parseFile(fp, "", st)
     if !ft.expectError && err != nil {
       t.Errorf("ParseFile(%q): Expected no error while parsing, got: %v", ft.name, err)
     }
