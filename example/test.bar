@@ -1,0 +1,2 @@
+{{ dir "%s/out" .Env.PWD }}
+Bar = {{ .Var "bar" }}

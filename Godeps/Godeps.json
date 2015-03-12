@@ -1,13 +1,32 @@
 {
 	"ImportPath": "github.com/albertrdixon/tmplnator",
-	"GoVersion": "go1.4.1",
+	"GoVersion": "go1.4.2",
 	"Packages": [
 		"./..."
 	],
 	"Deps": [
 		{
-			"ImportPath": "github.com/golang/glog",
-			"Rev": "44145f04b68cf362d9c4df2182967c2275eaefed"
+			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
+			"Comment": "v2.0.0-30-gafb14a3",
+			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"
+		},
+		{
+			"ImportPath": "github.com/coreos/etcd/pkg/types",
+			"Comment": "v2.0.0-30-gafb14a3",
+			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"
+		},
+		{
+			"ImportPath": "github.com/coreos/go-etcd/etcd",
+			"Comment": "v0.4.6-4-gadcbc79",
+			"Rev": "adcbc79ef9ef8ce64b43b63b9fcf9b6cb3c41c7e"
+		},
+		{
+			"ImportPath": "github.com/ian-kent/envconf",
+			"Rev": "c19809918c02ab33dc8635d68c77649313185275"
+		},
+		{
+			"ImportPath": "github.com/ian-kent/gofigure",
+			"Rev": "f67fd1884138ff76d88428969534f129a5827d6d"
 		},
 		{
 			"ImportPath": "github.com/oxtoacart/bpool",
