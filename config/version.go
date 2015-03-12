@@ -1,5 +1,5 @@
 package config
 
 const (
-  CodeVersion = "v0.1.0"
+  CodeVersion = "v0.1.1"
 )
