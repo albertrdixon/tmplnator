@@ -22,14 +22,29 @@ RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<versi
 
 ## Usage
 
-Super simple. Use the following methods in the template to set up how the file should be generated from the template: `destination` `mode` `user` `group`
+Help Menu:
+
+```
+Usage of ./t2:
+  -bpool-size="": Size of write buffer pool
+  -default-dir="": Default output directory
+  -delete="": Remove templates after processing
+  -etcd-peers=: etcd peers in host:port (can be provided multiple times)
+  -namespace="": etcd key namespace
+  -template-dir="": Template directory
+  -threads="": Number of processing threads
+  -v="": Verbosity (0:quiet output, 1:default, 2:debug output)
+  -version="": show version
+```
+
+Super simple. Use the following methods in the template to set up how the file should be generated from the template: `dir` `mode` `user` `group`
 
 ```
 # example supervisor.conf template
-{{ destination . "/etc/supervisor" }}
-{{ mode . 0644 }}
-{{ user . 0 }}
-{{ group . 0 }}
+{{ dir "/etc/supervisor" }}
+{{ mode 0644 }}
+{{ user 0 }}
+{{ group 0 }}
 [supervisord]
 nodaemon  = true
 ...
@@ -37,7 +52,7 @@ nodaemon  = true
 
 Add your templates to some directory: `ADD configs /templates`
 
-Run tmplnator like so: `t2 -td /templates`
+Run tmplnator like so: `t2 -template-dir /templates`
 
 And that's it!
 
@@ -45,13 +60,15 @@ And that's it!
 
 Access environment variables in the template with `.Env` like so `.Env.VARIABLE`
 
-`destination . "/path/to/destination/dir"`: Describe destination directory
+Access etcd values with `.Var <key>` if key not found will look in ENV
 
-`mode . <file_mode>`: Describe filemode for generated file
+`dir "/path/to/destination/dir"`: Describe destination directory
 
-`user . <uid>`: Describe uid for generated file
+`mode <file_mode>`: Describe filemode for generated file
 
-`group . <gid>`: Describe gid for generated file
+`user <uid>`: Describe uid for generated file
+
+`group <gid>`: Describe gid for generated file
 
 `to_json <input>`: Marshal JSON string
 
