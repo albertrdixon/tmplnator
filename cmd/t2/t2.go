@@ -1,82 +1,67 @@
 package main
 
 import (
-  "flag"
   "fmt"
-  "github.com/albertrdixon/tmplnator/template"
-  "github.com/albertrdixon/tmplnator/version"
+  "github.com/albertrdixon/tmplnator/config"
+  "github.com/albertrdixon/tmplnator/generator"
+  l "github.com/albertrdixon/tmplnator/logger"
+  "github.com/ian-kent/gofigure"
   "io/ioutil"
   "os"
-  "sync"
+  "path/filepath"
 )
 
-func exitErr(err error) {
-  fmt.Printf("There's been a problem: %v", err)
-  os.Exit(1)
-}
-
 func main() {
-  var (
-    V       = flag.Bool("v", false, "Print version")
-    src     = flag.String("td", "", "template dir to render")
-    del     = flag.Bool("d", false, "Remove templates after processing")
-    pre     = flag.String("P", "", "Dir prefix")
-    threads = flag.Int("T", 4, "Render threads")
-  )
-
-  flag.Parse()
-  if *V {
-    fmt.Printf("%s\n", version.RuntimeVersion(version.CodeVersion, version.Build))
-    os.Exit(0)
+  var cfg = config.Config{
+    TmplDir:     "/templates",
+    DefaultDir:  "",
+    Delete:      false,
+    Threads:     4,
+    BpoolSize:   4,
+    Verbosity:   1,
+    ShowVersion: false,
   }
 
-  if *src == "" {
-    fmt.Printf("Sorry, you need to provide the src dir.\n")
+  // gofigure.Debug = true
+  err := gofigure.Gofigure(&cfg)
+  if err != nil {
+    fmt.Printf("Error parsing config: %v\n", err)
     os.Exit(1)
   }
-  if *threads < 1 {
-    *threads = 1
+
+  if cfg.ShowVersion {
+    fmt.Println(config.RuntimeVersion(config.CodeVersion, config.Build))
+    os.Exit(0)
+  }
+  switch {
+  case cfg.Verbosity <= 0:
+    l.Level = 0
+  case cfg.Verbosity == 1:
+    l.Level = 1
+  case cfg.Verbosity >= 2:
+    l.Level = 2
   }
 
-  s, p := *src, *pre
-  var err error
-
-  if p == "tmp" {
-    if p, err = ioutil.TempDir("", "tnator"); err != nil {
-      fmt.Printf("Couldn't get tmp dir.")
-      exitErr(err)
+  if _, err := os.Stat(cfg.TmplDir); err != nil {
+    fmt.Printf("Problems reading dir %q: %v\n", cfg.TmplDir, err)
+    os.Exit(2)
+  }
+  if cfg.DefaultDir == "" {
+    d, err := ioutil.TempDir("", "T2")
+    if err != nil {
+      d = filepath.Join(os.TempDir(), "T2")
     }
-    fmt.Println(pre)
+    cfg.DefaultDir = d
   }
 
-  fmt.Printf("==> Parsing Templates in %q\n", s)
-  tStack, err := template.ParseDirectory(s, p)
+  // be := backend.New(cfg.Namespace, cfg.EtcdPeers)
+  g, err := generator.NewGenerator(&cfg)
   if err != nil {
-    fmt.Printf("Failed to parse templates.")
-    exitErr(err)
+    fmt.Printf("ERROR: %v", err)
   }
 
-  var wg sync.WaitGroup
-  wg.Add(*threads)
-  for i := 0; i < *threads; i++ {
-    go func() {
-      defer wg.Done()
-      for tStack.Len() > 0 {
-        if t, ok := tStack.Pop().(*template.Template); ok {
-          if err := t.Write(); err == nil {
-            if *del {
-              os.Remove(t.Src)
-            }
-          } else {
-            fmt.Printf("Error writing template: %v", err)
-          }
-        } else {
-          fmt.Printf("Could not cast stack item as template: %v", t)
-        }
-      }
-    }()
+  if err := g.Generate(); err != nil {
+    fmt.Printf("ERROR: %v", err)
   }
-
-  wg.Wait()
   os.Exit(0)
 }

@@ -1,4 +1,4 @@
-package template
+package generator
 
 import (
   "bytes"
@@ -12,12 +12,12 @@ import (
   "strings"
 )
 
-func newFuncMap() map[string]interface{} {
+func newFuncMap(f *file) map[string]interface{} {
   return map[string]interface{}{
-    "destination":     destination,
-    "mode":            mode,
-    "user":            user,
-    "group":           group,
+    "dir":             f.setDir,
+    "mode":            f.setMode,
+    "user":            f.setUser,
+    "group":           f.setGroup,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,
     "from_json_array": UnmarshalJSONArray,
@@ -37,26 +37,6 @@ func newFuncMap() map[string]interface{} {
     "trim_suffix":     strings.TrimSuffix,
     "trim_space":      strings.TrimSpace,
   }
-}
-
-func destination(t Template, d string, p ...interface{}) string {
-  files[t.Sha1].Path = fmt.Sprintf(d, p...)
-  return ""
-}
-
-func mode(t Template, m os.FileMode) string {
-  files[t.Sha1].Mode = m
-  return ""
-}
-
-func user(t Template, u int) string {
-  files[t.Sha1].User = u
-  return ""
-}
-
-func group(t Template, g int) string {
-  files[t.Sha1].Group = g
-  return ""
 }
 
 func UnmarshalJSON(data string) (map[string]interface{}, error) {

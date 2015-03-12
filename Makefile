@@ -1,10 +1,12 @@
 PROJECT = github.com/albertrdixon/tmplnator
+INSTALL = $(PROJECT)/cmd/t2
 EXECUTABLE = "t2"
-LDFLAGS = "-X $(PROJECT)/version.Build $$(git rev-parse --short HEAD) -s"
+LDFLAGS = "-X $(PROJECT)/config.Build $$(git rev-parse --short HEAD) -s"
 BINARY = "cmd/t2/t2.go"
 TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
 PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
 VERSION = "$$(./t2 -v)"
+BUILD_ARGS = ""
 
 .PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
 
@@ -56,11 +58,11 @@ build:
 
 install:
 	@echo "==> Installing $(EXECUTABLE) with ldflags $(LDFLAGS)"
-	@godep go install -ldflags $(LDFLAGS) $(BINARIES)
+	@godep go install -ldflags $(LDFLAGS) $(INSTALL)
 
 package: build
 	@echo "==> Tar'ing up the binary"
-	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64-$(shell ./t2 -version).tar.gz t2
+	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64-$(VERSION).tar.gz t2
 
 clean:
 	go clean ./...
