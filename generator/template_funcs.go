@@ -15,7 +15,9 @@ import (
 func newFuncMap(f *file) map[string]interface{} {
   return map[string]interface{}{
     "dir":             f.setDir,
+    "name":            f.setName,
     "mode":            f.setMode,
+    "dir_mode":        f.setDirMode,
     "user":            f.setUser,
     "group":           f.setGroup,
     "to_json":         marshalJSON,

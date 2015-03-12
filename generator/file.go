@@ -11,13 +11,14 @@ import (
 )
 
 type file struct {
-  body  *template.Template
-  src   string
-  name  string
-  dir   string
-  user  int
-  group int
-  mode  os.FileMode
+  body    *template.Template
+  src     string
+  name    string
+  dir     string
+  user    int
+  group   int
+  mode    os.FileMode
+  dirmode os.FileMode
 }
 
 func (f *file) setDir(dir string, args ...interface{}) string {
@@ -27,6 +28,16 @@ func (f *file) setDir(dir string, args ...interface{}) string {
     }
   }
   f.dir = fmt.Sprintf(dir, args...)
+  return ""
+}
+
+func (f *file) setName(name string, args ...interface{}) string {
+  for i, a := range args {
+    if a == nil {
+      args[i] = ""
+    }
+  }
+  f.name = fmt.Sprintf(name, args...)
   return ""
 }
 
@@ -42,6 +53,11 @@ func (f *file) setGroup(gid int) string {
 
 func (f *file) setMode(m os.FileMode) string {
   f.mode = m
+  return ""
+}
+
+func (f *file) setDirMode(dm os.FileMode) string {
+  f.dirmode = dm
   return ""
 }
 
@@ -83,12 +99,13 @@ func parseFile(path string, def string, st *stack.Stack) (err error) {
 
 func newFile(path string, def string, name string) *file {
   return &file{
-    src:   path,
-    name:  name,
-    dir:   def,
-    mode:  os.FileMode(0644),
-    user:  os.Geteuid(),
-    group: os.Getegid(),
+    src:     path,
+    name:    name,
+    dir:     def,
+    mode:    os.FileMode(0644),
+    dirmode: os.FileMode(0755),
+    user:    os.Geteuid(),
+    group:   os.Getegid(),
   }
 }
 
