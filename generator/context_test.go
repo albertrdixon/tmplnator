@@ -22,9 +22,9 @@ func TestVar(t *testing.T) {
 
   c := newContext(mb)
   for _, vt := range vartests {
-    out := c.Var(vt.key)
+    out := c.Get(vt.key)
     if out != vt.expected {
-      t.Errorf("Var(key=%s): Expected %q, got %q", vt.key, vt.expected, out)
+      t.Errorf("Get(key=%s): Expected %q, got %q", vt.key, vt.expected, out)
     }
   }
 }

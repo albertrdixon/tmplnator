@@ -8,18 +8,14 @@ import (
 )
 
 type Context struct {
-  Env   map[string]string
   store backend.Backend
 }
 
 func newContext(be backend.Backend) *Context {
-  return &Context{
-    Env:   envMap(),
-    store: be,
-  }
+  return &Context{be}
 }
 
-func (c *Context) Var(key string) string {
+func (c *Context) Get(key string) string {
   if c.store != nil {
     key = strings.ToLower(key)
     if rtn, err := c.store.Get(key); err == nil {
@@ -27,21 +23,6 @@ func (c *Context) Var(key string) string {
       return rtn
     }
   }
-
-  key = strings.ToUpper(strings.Replace(key, "/", "_", -1))
-  l.Debug("Lookup c.Env[%v]", key)
-  if rtn, ok := c.Env[key]; ok {
-    l.Debug("Got: %v", rtn)
-    return rtn
-  }
-  return ""
-}
-
-func envMap() map[string]string {
-  env := make(map[string]string, len(os.Environ()))
-  for _, val := range os.Environ() {
-    index := strings.Index(val, "=")
-    env[val[:index]] = val[index+1:]
-  }
-  return env
+  l.Debug("No backend configured, looking up %q in ENV", key)
+  return os.Getenv(strings.ToUpper(strings.Replace(key, "/", "_", -1)))
 }
