@@ -2,6 +2,8 @@ package config
 
 import (
   "fmt"
+  "os"
+  "path/filepath"
 )
 
 // Config is the config struct
@@ -40,6 +42,8 @@ func (b *boolflag) IsBoolFlag() bool {
 var (
   // Build is passed in via ldflags
   Build string
+  // Defaults is a config with default values
+  Defaults Config
 )
 
 func RuntimeVersion(version string, build string) string {
@@ -50,4 +54,16 @@ func RuntimeVersion(version string, build string) string {
     vers = version
   }
   return vers
+}
+
+func init() {
+  Defaults = Config{
+    TmplDir:     "/templates",
+    DefaultDir:  filepath.Join(os.TempDir(), "T2"),
+    Delete:      false,
+    Threads:     4,
+    BpoolSize:   4,
+    Verbosity:   1,
+    ShowVersion: false,
+  }
 }

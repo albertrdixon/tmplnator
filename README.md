@@ -16,7 +16,7 @@ Enter tmplnator. Templates describe where they should go, what their file mode s
 In your Dockerfile do something like:
 
 ```
-RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<version>/tnator-linux-amd64-<version>.tar.gz |\
+RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<version>/tnator-linux-amd64.tar.gz |\
     tar xvz -C /usr/local/bin
 ```
 
@@ -37,9 +37,23 @@ Usage of ./t2:
   -version="": show version
 ```
 
+Defaults:
+
+```golang
+  Defaults = Config{
+    TmplDir:     "/templates",
+    DefaultDir:  filepath.Join(os.TempDir(), "T2"),
+    Delete:      false,
+    Threads:     4,
+    BpoolSize:   4,
+    Verbosity:   1,
+    ShowVersion: false,
+  }
+```
+
 Super simple. Use the following methods in the template to set up how the file should be generated from the template: `dir` `mode` `user` `group`
 
-```
+```golang
 # example supervisor.conf template
 {{ dir "/etc/supervisor" }}
 {{ mode 0644 }}
@@ -56,15 +70,21 @@ Run tmplnator like so: `t2 -template-dir /templates`
 
 And that's it!
 
+*NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+
 ## Template Functions
 
 Access environment variables in the template with `.Env` like so `.Env.VARIABLE`
 
 Access etcd values with `.Var <key>` if key not found will look in ENV
 
-`dir "/path/to/destination/dir"`: Describe destination directory
+`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. *NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+
+`name "name" <args...>`: Describe name of generated file. Accepts printf style formatting of name string.
 
 `mode <file_mode>`: Describe filemode for generated file
+
+`dir_mode <file_mode>`: Describe mode for any generated directories
 
 `user <uid>`: Describe uid for generated file
 
@@ -80,13 +100,15 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 
 `last <slice>`: Return the last element of the slice
 
-`file_exists <filename.`: True if file exists
+`file_exists <filename>`: True if file exists
 
 `parseURL <string>`: Return url.URL object of given url string
 
 `has_key <map> <key>`: True if key exists in map
 
 `default <value> <default_value>`: Output default_value if value is nil or empty string, otherwise output value
+
+`fmt <format> <args...>`: fmt.Sprintf
 
 `split <string>`: strings.Split
 

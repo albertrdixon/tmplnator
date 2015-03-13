@@ -8,19 +8,10 @@ import (
   "github.com/ian-kent/gofigure"
   "io/ioutil"
   "os"
-  "path/filepath"
 )
 
 func main() {
-  var cfg = config.Config{
-    TmplDir:     "/templates",
-    DefaultDir:  "",
-    Delete:      false,
-    Threads:     4,
-    BpoolSize:   4,
-    Verbosity:   1,
-    ShowVersion: false,
-  }
+  var cfg = config.Defaults
 
   // gofigure.Debug = true
   err := gofigure.Gofigure(&cfg)
@@ -46,15 +37,10 @@ func main() {
     fmt.Printf("Problems reading dir %q: %v\n", cfg.TmplDir, err)
     os.Exit(2)
   }
-  if cfg.DefaultDir == "" {
-    d, err := ioutil.TempDir("", "T2")
-    if err != nil {
-      d = filepath.Join(os.TempDir(), "T2")
-    }
+  if d, err := ioutil.TempDir("", "T2"); err == nil {
     cfg.DefaultDir = d
   }
 
-  // be := backend.New(cfg.Namespace, cfg.EtcdPeers)
   g, err := generator.NewGenerator(&cfg)
   if err != nil {
     fmt.Printf("ERROR: %v", err)
