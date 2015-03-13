@@ -23,6 +23,7 @@ func newFuncMap(f *file) map[string]interface{} {
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,
     "from_json_array": UnmarshalJSONArray,
+    "fmt":             fmt.Sprintf,
     "first":           arrayFirst,
     "last":            arrayLast,
     "file_exists":     fileExists,
@@ -41,16 +42,14 @@ func newFuncMap(f *file) map[string]interface{} {
   }
 }
 
-func UnmarshalJSON(data string) (map[string]interface{}, error) {
-  var ret map[string]interface{}
-  err := json.Unmarshal([]byte(data), &ret)
-  return ret, err
+func UnmarshalJSON(data string) (j map[string]interface{}, e error) {
+  e = json.Unmarshal([]byte(data), &j)
+  return
 }
 
-func UnmarshalJSONArray(data string) ([]interface{}, error) {
-  var ret []interface{}
-  err := json.Unmarshal([]byte(data), &ret)
-  return ret, err
+func UnmarshalJSONArray(data string) (ja []interface{}, e error) {
+  e = json.Unmarshal([]byte(data), &ja)
+  return
 }
 
 func fileExists(path string) (bool, error) {
@@ -64,11 +63,9 @@ func fileExists(path string) (bool, error) {
   return false, err
 }
 
-func hasKey(item map[string]string, key string) bool {
-  if _, ok := item[key]; ok {
-    return true
-  }
-  return false
+func hasKey(item map[string]string, key string) (ok bool) {
+  _, ok = item[key]
+  return
 }
 
 func defaultValue(arg interface{}, def interface{}) interface{} {
