@@ -39,7 +39,7 @@ Usage of ./t2:
 
 Defaults:
 
-```golang
+```go
   Defaults = Config{
     TmplDir:     "/templates",
     DefaultDir:  filepath.Join(os.TempDir(), "T2"),
@@ -53,7 +53,7 @@ Defaults:
 
 Super simple. Use the following methods in the template to set up how the file should be generated from the template: `dir` `mode` `user` `group`
 
-```golang
+```
 # example supervisor.conf template
 {{ dir "/etc/supervisor" }}
 {{ mode 0644 }}
