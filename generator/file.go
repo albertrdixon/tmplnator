@@ -2,7 +2,7 @@ package generator
 
 import (
   "fmt"
-  l "github.com/albertrdixon/tmplnator/logger"
+  l "github.com/Sirupsen/logrus"
   "github.com/albertrdixon/tmplnator/stack"
   "io/ioutil"
   "os"
@@ -67,12 +67,16 @@ func (f *file) setSkip() string {
   return ""
 }
 
+func (f *file) Src() string {
+  return f.src
+}
+
 func (f *file) destination() string {
   return filepath.Join(f.dir, f.name)
 }
 
 func parseFiles(dir string, def string) (st *stack.Stack, err error) {
-  l.Info("Parsing Templates in %q", dir)
+  l.WithField("directory", dir).Info("Parsing files")
   st = stack.NewStack()
   err = filepath.Walk(dir, walkfunc(def, st))
   return
@@ -83,12 +87,16 @@ func walkfunc(def string, st *stack.Stack) filepath.WalkFunc {
     ext := filepath.Ext(path)
     if info.Mode().IsRegular() && ext != ".skip" && ext != ".ignore" {
       return parseFile(path, def, st)
+    } else {
+      l.WithField("path", path).Debug("Skipping")
     }
     return nil
   }
 }
 
 func parseFile(path string, def string, st *stack.Stack) (err error) {
+  l.WithField("path", path).Debug("Parsing file")
+
   f := newFile(path, def, filepath.Base(path))
   contents, err := ioutil.ReadFile(path)
   if err != nil {
