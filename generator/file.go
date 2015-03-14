@@ -19,6 +19,7 @@ type file struct {
   group   int
   mode    os.FileMode
   dirmode os.FileMode
+  skip    bool
 }
 
 func (f *file) setDir(dir string, args ...interface{}) string {
@@ -61,6 +62,11 @@ func (f *file) setDirMode(dm os.FileMode) string {
   return ""
 }
 
+func (f *file) setSkip() string {
+  f.skip = true
+  return ""
+}
+
 func (f *file) destination() string {
   return filepath.Join(f.dir, f.name)
 }
@@ -74,7 +80,8 @@ func parseFiles(dir string, def string) (st *stack.Stack, err error) {
 
 func walkfunc(def string, st *stack.Stack) filepath.WalkFunc {
   return func(path string, info os.FileInfo, err error) error {
-    if info.Mode().IsRegular() {
+    ext := filepath.Ext(path)
+    if info.Mode().IsRegular() && ext != ".skip" && ext != ".ignore" {
       return parseFile(path, def, st)
     }
     return nil
@@ -106,6 +113,7 @@ func newFile(path string, def string, name string) *file {
     dirmode: os.FileMode(0755),
     user:    os.Geteuid(),
     group:   os.Getegid(),
+    skip:    false,
   }
 }
 

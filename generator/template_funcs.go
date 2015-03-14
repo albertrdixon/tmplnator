@@ -20,6 +20,7 @@ func newFuncMap(f *file) map[string]interface{} {
     "dir_mode":        f.setDirMode,
     "user":            f.setUser,
     "group":           f.setGroup,
+    "skip":            f.setSkip,
     "env":             os.Getenv,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,

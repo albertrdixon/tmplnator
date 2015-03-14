@@ -85,6 +85,10 @@ func (g *generator) write(f *file) error {
     return err
   }
 
+  if f.skip {
+    return nil
+  }
+
   l.Info("Generating %q from %q", f.destination(), f.src)
   if _, err := os.Stat(f.dir); err != nil {
     if err = os.MkdirAll(f.dir, f.dirmode); err != nil {
