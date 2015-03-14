@@ -1,2 +1,4 @@
-{{ dir "%s/out" .Env.PWD }}
-Bar = {{ .Var "bar" }}
+{{ dir "%s/out" (env "PWD") }}
+# This file should be $PWD/out/test.bar
+
+.Get "bar": {{ .Get "bar" }} (should be "This is an example" without quotes)

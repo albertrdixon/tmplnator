@@ -1,3 +1,5 @@
-{{ dir "%s/out" .Env.PWD }}{{ mode 0777 }}{{ user 0 }}
-Foo = {{ .Var "foo/bar" }}
-Baz = {{ .Env.BAZ }}
+{{ dir "%s/out" (env "PWD") }}{{ name "something_else" }}{{ mode 0640 }}
+# This file should be $PWD/out/something_else with mode 0640 (u+rw g+r)
+
+.Get "foo/bar": {{ .Get "foo/bar" }} (should be 12345)
+env "BAZ": {{ env "BAZ" }} (should be Bif)
