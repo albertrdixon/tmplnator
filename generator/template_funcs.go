@@ -20,6 +20,7 @@ func newFuncMap(f *file) map[string]interface{} {
     "dir_mode":        f.setDirMode,
     "user":            f.setUser,
     "group":           f.setGroup,
+    "env":             os.Getenv,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,
     "from_json_array": UnmarshalJSONArray,
@@ -28,6 +29,7 @@ func newFuncMap(f *file) map[string]interface{} {
     "last":            arrayLast,
     "file_exists":     fileExists,
     "has_key":         hasKey,
+    "in_env":          inEnv,
     "default":         defaultValue,
     "parseURL":        parseURL,
     "split":           strings.Split,
@@ -123,4 +125,11 @@ func parseURL(rawurl string) (*url.URL, error) {
     return nil, err
   }
   return u, nil
+}
+
+func inEnv(key string) bool {
+  if ok := os.Getenv(key); ok == "" {
+    return false
+  }
+  return true
 }
