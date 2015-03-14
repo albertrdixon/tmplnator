@@ -10,6 +10,7 @@ import (
   "os"
   "reflect"
   "strings"
+  "time"
 )
 
 func newFuncMap(f *file) map[string]interface{} {
@@ -22,6 +23,8 @@ func newFuncMap(f *file) map[string]interface{} {
     "group":           f.setGroup,
     "skip":            f.setSkip,
     "env":             os.Getenv,
+    "source":          f.Src,
+    "timestamp":       timestamp,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,
     "from_json_array": UnmarshalJSONArray,
@@ -133,4 +136,8 @@ func inEnv(key string) bool {
     return false
   }
   return true
+}
+
+func timestamp() string {
+  return time.Now().String()
 }
