@@ -1,4 +1,4 @@
-package generator
+package file
 
 import (
   "github.com/albertrdixon/tmplnator/stack"

@@ -1,4 +1,4 @@
-package generator
+package file
 
 import (
   "bytes"
@@ -13,7 +13,7 @@ import (
   "time"
 )
 
-func newFuncMap(f *file) map[string]interface{} {
+func newFuncMap(f File) map[string]interface{} {
   return map[string]interface{}{
     "dir":             f.setDir,
     "name":            f.setName,
