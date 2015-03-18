@@ -1,8 +1,6 @@
 # tmplnator
 
-[![Build Status](https://travis-ci.org/albertrdixon/tmplnator.svg?branch=master)](https://travis-ci.org/albertrdixon/tmplnator)
-
-[![GoDoc](https://godoc.org/github.com/albertrdixon/tmplnator?status.svg)](https://godoc.org/github.com/albertrdixon/tmplnator)
+[![Build Status](https://travis-ci.org/albertrdixon/tmplnator.svg?branch=master)](https://travis-ci.org/albertrdixon/tmplnator) [![GoDoc](https://godoc.org/github.com/albertrdixon/tmplnator?status.svg)](https://godoc.org/github.com/albertrdixon/tmplnator)
 
 ~~A killing machine sent from the future~~ 
 Yet another file generator using golang [text/template](http://golang.org/pkg/text/template/).
