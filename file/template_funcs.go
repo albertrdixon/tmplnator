@@ -23,7 +23,7 @@ func newFuncMap(f File) map[string]interface{} {
     "group":           f.setGroup,
     "skip":            f.setSkip,
     "env":             os.Getenv,
-    "source":          f.Src,
+    "file_info":       f.Info,
     "timestamp":       timestamp,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,

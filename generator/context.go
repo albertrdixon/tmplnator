@@ -9,11 +9,12 @@ import (
 
 // Context type objects are passed into the template during template.Execute().
 type Context struct {
+  Env   map[string]string
   store backend.Backend
 }
 
 func newContext(be backend.Backend) *Context {
-  return &Context{be}
+  return &Context{envMap(), be}
 }
 
 // Get performs a lookup of the given key in the backend. Failing that,
@@ -34,4 +35,13 @@ func (c *Context) Get(key string) string {
 
   l.WithField("key", key).Debug("Not in backend, looking in ENV")
   return os.Getenv(strings.ToUpper(strings.Replace(key, "/", "_", -1)))
+}
+
+func envMap() map[string]string {
+  env := make(map[string]string, len(os.Environ()))
+  for _, val := range os.Environ() {
+    index := strings.Index(val, "=")
+    env[val[:index]] = val[index+1:]
+  }
+  return env
 }

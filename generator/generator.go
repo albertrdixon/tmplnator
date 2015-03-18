@@ -11,8 +11,7 @@ import (
 )
 
 type generator struct {
-  // files      *stack.Stack
-  files      *file.FileQueue
+  files      *file.Queue
   defaultDir string
   context    *Context
   bpool      *bpool.BufferPool
@@ -68,11 +67,11 @@ func (g *generator) process(id int) {
   for f := range g.files.Queue() {
     l.WithFields(l.Fields{
       "thread_id": id,
-      "template":  f.Src(),
+      "template":  f.Info().Src,
     }).Debug("Processing template")
     if err := g.write(f); err == nil {
       if g.del {
-        l.WithField("template", f.Src()).Info("Removing template")
+        l.WithField("template", f.Info().Src).Info("Removing template")
         if err := f.DeleteTemplate(); err != nil {
           l.WithField("error", err).Error("Failed to remove file")
         }

@@ -11,15 +11,16 @@ import (
 )
 
 type templateFile struct {
-  template *tmpl.Template
-  src      string
-  name     string
-  dir      string
-  user     int
-  group    int
-  mode     os.FileMode
-  dirmode  os.FileMode
-  skip     bool
+  template     *tmpl.Template
+  src          string
+  name         string
+  dir          string
+  user         int
+  group        int
+  mode         os.FileMode
+  dirmode      os.FileMode
+  skip         bool
+  bytesWritten int
 }
 
 func (tf *templateFile) Write(b *bytes.Buffer, data interface{}) (err error) {
@@ -55,7 +56,8 @@ func (tf *templateFile) Write(b *bytes.Buffer, data interface{}) (err error) {
     "template": tf.src,
     "file":     tf.Destination(),
   }).Info("Generating file")
-  _, err = fh.Write(b.Bytes())
+  n, err := fh.Write(b.Bytes())
+  tf.bytesWritten = n
   if err != nil {
     return err
   }
@@ -67,8 +69,28 @@ func (tf *templateFile) Read() (b []byte, err error) {
   return
 }
 
+func (tf *templateFile) Info() Info {
+  return Info{
+    Src:     tf.src,
+    Name:    tf.name,
+    Dir:     tf.dir,
+    User:    tf.user,
+    Group:   tf.group,
+    Mode:    tf.mode,
+    Dirmode: tf.dirmode,
+  }
+}
+
 func (tf *templateFile) Src() string {
   return tf.src
+}
+
+func (tf *templateFile) Name() string {
+  return tf.name
+}
+
+func (tf *templateFile) Output() string {
+  return fmt.Sprintf("%d", tf.bytesWritten)
 }
 
 func (tf *templateFile) Destination() string {
@@ -129,11 +151,11 @@ func (tf *templateFile) setSkip() string {
   return ""
 }
 
-func newTemplateFile(path string, def string, name string) File {
+func newTemplateFile(path string, defualtDir string) File {
   return &templateFile{
     src:     path,
-    name:    name,
-    dir:     def,
+    name:    filepath.Base(path),
+    dir:     defualtDir,
     mode:    os.FileMode(0644),
     dirmode: os.FileMode(0755),
     user:    os.Geteuid(),

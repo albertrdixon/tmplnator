@@ -6,12 +6,17 @@ import (
   "text/template"
 )
 
+// Testing is set to true for running file tests
+var Testing bool
+
+// File describes a tmplnator template file
 type File interface {
   Write(*bytes.Buffer, interface{}) error
   Read() ([]byte, error)
   Template(*template.Template)
   Destination() string
-  Src() string
+  Info() Info
+  Output() string
   DeleteTemplate() error
   setDir(string, ...interface{}) string
   setName(string, ...interface{}) string
@@ -22,9 +27,26 @@ type File interface {
   setSkip() string
 }
 
-func newFile(args ...string) File {
-  if len(args) == 3 {
-    return newTemplateFile(args[0], args[1], args[2])
+// Info objects have all the info for objects that implement File.
+type Info struct {
+  Src     string
+  Name    string
+  Dir     string
+  User    int
+  Group   int
+  Mode    os.FileMode
+  Dirmode os.FileMode
+}
+
+// NewFile returns a File object. If Testing is true underlying struct is
+// a mockFile, otherwise it is a templateFile
+func NewFile(path string, defaultDir string) File {
+  if Testing {
+    return newMockFile(path, defaultDir)
   }
-  return newMockFile(args[0], args[1])
+  return newTemplateFile(path, defaultDir)
+}
+
+func init() {
+  Testing = false
 }
