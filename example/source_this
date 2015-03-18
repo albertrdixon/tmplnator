@@ -1,0 +1,4 @@
+# {{ skip }}
+export FOO_BAR=12345
+export BAZ=Bif
+export BAR="This is an example"

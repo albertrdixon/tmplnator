@@ -70,15 +70,15 @@ Run tmplnator like so: `t2 -template-dir /templates`
 
 And that's it!
 
-*NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+**NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
 ## Template Functions
 
 Access environment variables in the template with `.Env` like so `.Env.VARIABLE`
 
-Access etcd values with `.Var <key>` if key not found will look in ENV
+Access etcd values with `.Get <key>` if key not found will look in ENV
 
-`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. *NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. **NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
 `name "name" <args...>`: Describe name of generated file. Accepts printf style formatting of name string.
 
@@ -89,6 +89,8 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 `user <uid>`: Describe uid for generated file
 
 `group <gid>`: Describe gid for generated file
+
+`file_info`: Returns a file.Info object for the current file
 
 `to_json <input>`: Marshal JSON string
 
@@ -102,7 +104,7 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 
 `file_exists <filename>`: True if file exists
 
-`parseURL <string>`: Return url.URL object of given url string
+`parseURL <string>`: Return [url.URL](https://golang.org/pkg/net/url/#URL) object of given url string
 
 `has_key <map> <key>`: True if key exists in map
 
@@ -110,9 +112,9 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 
 `fmt <format> <args...>`: fmt.Sprintf
 
-`split <string>`: strings.Split
+`split <string> <separator>`: strings.Split
 
-`join <slice>`: strings.Join
+`join <slice> <separator>`: strings.Join
 
 `has_suffix <string> <suffix>`: strings.HasSuffix
 
@@ -127,3 +129,11 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 `trim_suffix <string> <suffix>`: strings.TrimSuffix
 
 `trim_space <string>`: strings.TrimSpace
+
+## Shout Outs
+
+My projects steals heavily from the wonderful projects below:
+
+* [jwilder's dockerize](https://github.com/jwilder/dockerize)
+* [kelseyhightower's confd](https://github.com/kelseyhightower/confd)
+* [jwilder's docker-gen](https://github.com/jwilder/docker-gen)

@@ -1,34 +1,35 @@
 package generator
 
 import (
+  "fmt"
+  l "github.com/Sirupsen/logrus"
   "github.com/albertrdixon/tmplnator/backend"
   "github.com/albertrdixon/tmplnator/config"
-  l "github.com/albertrdixon/tmplnator/logger"
-  "github.com/albertrdixon/tmplnator/stack"
+  "github.com/albertrdixon/tmplnator/file"
   "github.com/oxtoacart/bpool"
-  "os"
   "sync"
 )
 
 type generator struct {
-  files      *stack.Stack
+  files      *file.Queue
   defaultDir string
   context    *Context
   bpool      *bpool.BufferPool
   wg         *sync.WaitGroup
   threads    int
   del        bool
+  errors     chan error
 }
 
 // NewGenerator returns a generator with a parsed file stack
 func NewGenerator(c *config.Config) (*generator, error) {
-  fs, err := parseFiles(c.TmplDir, c.DefaultDir)
+  fq, err := file.ParseFiles(c.TmplDir, c.DefaultDir)
   if err != nil {
     return nil, err
   }
 
   return &generator{
-    files:      fs,
+    files:      fq,
     defaultDir: c.DefaultDir,
     context:    newContext(backend.New(c.Namespace, c.EtcdPeers)),
     bpool:      bpool.NewBufferPool(c.BpoolSize),
@@ -41,65 +42,59 @@ func NewGenerator(c *config.Config) (*generator, error) {
 // Generate kicks off file generation. Will spin out generator.threads
 // number of goroutines running generator.process()
 func (g *generator) Generate() (err error) {
-  l.Info("Generating files (threads=%d)", g.threads)
+  l.WithField("threads", g.threads).Info("Generating files")
   g.wg.Add(g.threads)
 
   for i := 0; i < g.threads; i++ {
-    go g.process()
+    go g.process(i)
   }
 
   g.wg.Wait()
-  l.Quiet(g.defaultDir)
+  if l.GetLevel() <= l.ErrorLevel {
+    fmt.Println(g.defaultDir)
+  }
   return nil
 }
 
-func (g *generator) process() {
+func (g *generator) process(id int) {
+  l.WithFields(l.Fields{
+    "thread_id":       id,
+    "file_stack_size": g.files.Len(),
+  }).Debug("Starting processing thread")
   defer g.wg.Done()
+  defer g.catch(id)
 
-  l.Debug("files.Len(): %d", g.files.Len())
-  for g.files.Len() > 0 {
-    if f, ok := g.files.Pop().(*file); ok {
-      if err := g.write(f); err == nil {
-        os.Chown(f.destination(), f.user, f.group)
-        if g.del {
-          l.Info("Removing %q", f.src)
-          if err := os.Remove(f.src); err != nil {
-            l.Info("Problem in remove: %v", err)
-          }
+  for f := range g.files.Queue() {
+    l.WithFields(l.Fields{
+      "thread_id": id,
+      "template":  f.Info().Src,
+    }).Debug("Processing template")
+    if err := g.write(f); err == nil {
+      if g.del {
+        l.WithField("template", f.Info().Src).Info("Removing template")
+        if err := f.DeleteTemplate(); err != nil {
+          l.WithField("error", err).Error("Failed to remove file")
         }
-      } else {
-        l.Info("Problem in write: %v", err)
       }
     } else {
-      panic("Internal Error: Could not cast stack item as file")
+      l.WithField("error", err).Fatal("Failed to write file")
     }
   }
 }
 
-func (g *generator) write(f *file) error {
+func (g *generator) write(f file.File) (err error) {
   b := g.bpool.Get()
   defer g.bpool.Put(b)
 
-  err := f.body.Execute(b, g.context)
-  if err != nil {
-    return err
-  }
+  err = f.Write(b, g.context)
+  return
+}
 
-  l.Info("Generating %q from %q", f.destination(), f.src)
-  if _, err := os.Stat(f.dir); err != nil {
-    if err = os.MkdirAll(f.dir, f.dirmode); err != nil {
-      return err
-    }
+func (g *generator) catch(tid int) {
+  if r := recover(); r != nil {
+    l.WithFields(l.Fields{
+      "thread_id": tid,
+      "message":   r,
+    }).Fatal("Recovered from panic!")
   }
-  fh, err := os.OpenFile(f.destination(), os.O_WRONLY|os.O_TRUNC|os.O_CREATE, f.mode)
-  if err != nil {
-    return err
-  }
-  defer fh.Close()
-
-  _, err = fh.Write(b.Bytes())
-  if err != nil {
-    return err
-  }
-  return nil
 }

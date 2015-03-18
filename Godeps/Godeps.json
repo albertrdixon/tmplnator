@@ -6,6 +6,11 @@
 	],
 	"Deps": [
 		{
+			"ImportPath": "github.com/Sirupsen/logrus",
+			"Comment": "v0.6.6-2-g2cea0f0",
+			"Rev": "2cea0f0d141f56fae06df5b813ec4119d1c8ccbd"
+		},
+		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
 			"Comment": "v2.0.0-30-gafb14a3",
 			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"

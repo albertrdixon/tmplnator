@@ -1,4 +1,4 @@
-package generator
+package file
 
 import (
   "bytes"
@@ -10,9 +10,10 @@ import (
   "os"
   "reflect"
   "strings"
+  "time"
 )
 
-func newFuncMap(f *file) map[string]interface{} {
+func newFuncMap(f File) map[string]interface{} {
   return map[string]interface{}{
     "dir":             f.setDir,
     "name":            f.setName,
@@ -20,6 +21,10 @@ func newFuncMap(f *file) map[string]interface{} {
     "dir_mode":        f.setDirMode,
     "user":            f.setUser,
     "group":           f.setGroup,
+    "skip":            f.setSkip,
+    "env":             os.Getenv,
+    "file_info":       f.Info,
+    "timestamp":       timestamp,
     "to_json":         marshalJSON,
     "from_json":       UnmarshalJSON,
     "from_json_array": UnmarshalJSONArray,
@@ -28,6 +33,7 @@ func newFuncMap(f *file) map[string]interface{} {
     "last":            arrayLast,
     "file_exists":     fileExists,
     "has_key":         hasKey,
+    "in_env":          inEnv,
     "default":         defaultValue,
     "parseURL":        parseURL,
     "split":           strings.Split,
@@ -123,4 +129,15 @@ func parseURL(rawurl string) (*url.URL, error) {
     return nil, err
   }
   return u, nil
+}
+
+func inEnv(key string) bool {
+  if ok := os.Getenv(key); ok == "" {
+    return false
+  }
+  return true
+}
+
+func timestamp() string {
+  return time.Now().String()
 }
