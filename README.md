@@ -70,15 +70,15 @@ Run tmplnator like so: `t2 -template-dir /templates`
 
 And that's it!
 
-*NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+**NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
 ## Template Functions
 
 Access environment variables in the template with `.Env` like so `.Env.VARIABLE`
 
-Access etcd values with `.Var <key>` if key not found will look in ENV
+Access etcd values with `.Get <key>` if key not found will look in ENV
 
-`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. *NOTE*: Templates without a described `dir` will use `default-dir` as their output directory.
+`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. **NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
 `name "name" <args...>`: Describe name of generated file. Accepts printf style formatting of name string.
 
@@ -89,6 +89,8 @@ Access etcd values with `.Var <key>` if key not found will look in ENV
 `user <uid>`: Describe uid for generated file
 
 `group <gid>`: Describe gid for generated file
+
+`file_info`: Returns a file.Info object for the current file
 
 `to_json <input>`: Marshal JSON string
 
