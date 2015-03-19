@@ -132,6 +132,8 @@ Access etcd values with `.Get <key>` if key not found will look in ENV
 
 `trim_space <string>`: strings.TrimSpace
 
+`new_function`: something
+
 ## Shout Outs
 
 My projects steals heavily from the wonderful projects below:
