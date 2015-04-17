@@ -11,6 +11,10 @@
 			"Rev": "2cea0f0d141f56fae06df5b813ec4119d1c8ccbd"
 		},
 		{
+			"ImportPath": "github.com/alecthomas/units",
+			"Rev": "6b4e7dc5e3143b85ea77909c72caf89416fc2915"
+		},
+		{
 			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
 			"Comment": "v2.0.0-30-gafb14a3",
 			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"
@@ -26,16 +30,13 @@
 			"Rev": "adcbc79ef9ef8ce64b43b63b9fcf9b6cb3c41c7e"
 		},
 		{
-			"ImportPath": "github.com/ian-kent/envconf",
-			"Rev": "c19809918c02ab33dc8635d68c77649313185275"
+			"ImportPath": "github.com/spf13/afero",
+			"Rev": "139e50e29af82d1d998f0e38fabf4947c668acc6"
 		},
 		{
-			"ImportPath": "github.com/ian-kent/gofigure",
-			"Rev": "f67fd1884138ff76d88428969534f129a5827d6d"
-		},
-		{
-			"ImportPath": "github.com/oxtoacart/bpool",
-			"Rev": "923fab21d0624a469b877a05bbfc562c1c26c663"
+			"ImportPath": "gopkg.in/alecthomas/kingpin.v1",
+			"Comment": "v1.3.6",
+			"Rev": "55a69a226d28a43b913720f5d765706d49c8fa9e"
 		}
 	]
 }
