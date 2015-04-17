@@ -63,7 +63,7 @@ func (g *Generator) Generate(dir string) ([]string, []error) {
 	errChan = make(chan error, 10)
 	data = NewData(Backend)
 
-	l.WithField("directory", dir).Info("Starting generator.")
+	l.Infof("Starting generator. Template directory: %q", dir)
 	paths := dirRead(dir, g.srcFs)
 	l.Infof("Found %d files to parse.", len(paths))
 	templates := parseTemplates(g.srcFs, paths...)
@@ -136,7 +136,7 @@ func writeFiles(n int, templates <-chan *Template, fs afero.Fs) <-chan string {
 			if t.template == nil {
 				continue
 			}
-			l.Debugf("(%d) Working on %s", n, t.Info.Name)
+			l.Debugf("%s: Working on %s", thread, t.Info.Name)
 			buf := new(bytes.Buffer)
 			if err := t.template.Execute(buf, data); err != nil {
 				errChan <- newGeneratorError(thread, "Could not exec template %s: %v", t.Info.Source, err)
@@ -182,7 +182,7 @@ func dirRead(root string, fs afero.Fs) []string {
 	}
 
 	for _, item := range items {
-		l.Debugf("Reading item %s", item)
+		l.Debugf("Reading item %q", item.Name())
 		if item.IsDir() {
 			files = append(files, dirRead(filepath.Join(root, item.Name()), fs)...)
 			continue
@@ -198,9 +198,9 @@ func merge(cs ...<-chan string) <-chan string {
 	var wg sync.WaitGroup
 	out := make(chan string)
 
-	output := func(c <-chan string) {
+	output := func(n int, c <-chan string) {
 		for f := range c {
-			l.Debugf("Got Output: %v", f)
+			l.Debugf("gatherer (%d): Got Output: %v", n, f)
 			out <- f
 		}
 		l.Debug("Done")
@@ -209,8 +209,8 @@ func merge(cs ...<-chan string) <-chan string {
 	l.Debugf("WaitGroup: %d", len(cs))
 	wg.Add(len(cs))
 	for i, c := range cs {
-		l.Debugf("Get Output (%d)", i)
-		go output(c)
+		l.Debugf("START: Result Gatherer (%d)", i)
+		go output(i, c)
 	}
 
 	go func() {
