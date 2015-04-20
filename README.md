@@ -25,7 +25,7 @@ RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<versi
 Help Menu:
 
 ```
-usage: t2-darwin-amd64 [<flags>] <template-directory>
+usage: t2 [<flags>] <template-directory>
 
 Flags:
   --help           Show help.
@@ -33,7 +33,7 @@ Flags:
   -q, --quiet      Enable quiet mode
   -p, --print-tmp  Print out TmpDir
   -F, --force-tmp  Force all generated files to be written to TmpDir
-  -T, --tmpdir="/var/folders/pg/h3zftzc93rdb0mcr00hvckzr0000gn/T/T2"
+  -T, --tmpdir="$TMPDIR/T2"
                    Set TmpDir
   --version        Show application version.
 
