@@ -23,10 +23,12 @@ help:
 	@echo "  clean"
 
 dep-save:
-	godep save ./...
+	@echo "==> Saving dependencies..."
+	@godep save ./...
 
 dep-restore:
-	godep restore
+	@echo "==> Restoring dependencies..."
+	@godep restore
 
 test:
 	@echo "==> Running all tests"
@@ -54,5 +56,6 @@ package: build
 	done
 
 clean:
-	go clean ./...
-	rm -rf t2* tnator*.tar.gz
+	@echo "==> Cleaning up workspace..."
+	@go clean ./...
+	@rm -rf t2* tnator*.tar.gz
