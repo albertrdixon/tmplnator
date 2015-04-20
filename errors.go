@@ -1,39 +1,17 @@
 package tmplnator
 
-import (
-	"fmt"
+import "fmt"
 
-	l "github.com/Sirupsen/logrus"
-)
-
-// TemplateError are template related errors
-type TemplateError struct {
-	template string
-	msg      string
+type FileError struct {
+	File     string
+	Template string
+	Msg      string
 }
 
-// GeneratorError are generator related errors
-type GeneratorError struct {
-	thread string
-	msg    string
+func (f FileError) Error() string {
+	return fmt.Sprintf("%s: %s", f.File, f.Msg)
 }
 
-func (t TemplateError) Error() string {
-	return fmt.Sprintf("%s: %s", t.template, t.msg)
-}
-
-func (g GeneratorError) Error() string {
-	return fmt.Sprintf("%s: %s", g.thread, g.msg)
-}
-
-func newGeneratorError(thread string, format string, items ...interface{}) GeneratorError {
-	ge := GeneratorError{thread, fmt.Sprintf(format, items...)}
-	l.Error(ge.Error())
-	return ge
-}
-
-func newTemplateError(template string, format string, items ...interface{}) TemplateError {
-	te := TemplateError{template, fmt.Sprintf(format, items...)}
-	l.Error(te.Error())
-	return te
+func NewFileError(f *File, format string, items ...interface{}) FileError {
+	return FileError{f.info.fileName, f.template.Name(), fmt.Sprintf(format, items...)}
 }
