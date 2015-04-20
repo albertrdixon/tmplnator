@@ -37,7 +37,8 @@ func main() {
 		tmplnator.TmpDir = *tmpDir
 	}
 
-	tmplnator.NewGenerator(false, false).Generate(*rootDir)
+	tmplnator.InitFs(false, false)
+	tmplnator.Generate(*rootDir)
 	if *printTmpDir {
 		println(tmplnator.TmpDir)
 	}
