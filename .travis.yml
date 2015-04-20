@@ -2,7 +2,10 @@ os: linux
 language: go
 go: 1.4.2
 
-install: go get github.com/tools/godep
+install: 
+  - go get github.com/tools/godep
+  - go get github.com/mitchellh/gox
+before_script: make dep-restore
 script: make test-verbose
 after_success: make package
 
