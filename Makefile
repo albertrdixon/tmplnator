@@ -1,14 +1,9 @@
 PROJECT = github.com/albertrdixon/tmplnator
-INSTALL = $(PROJECT)/cmd/t2
-EXECUTABLE = "t2"
-LDFLAGS = "-s"
-BINARY = "cmd/t2/t2.go"
 TEST_COMMAND = godep go test
-PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
-VERSION = "$$(./t2 -v)"
+PLATFORMS = linux darwin
 BUILD_ARGS = ""
 
-.PHONY: dep-save dep-restore test test-verbose test-integration vet lint build install clean
+.PHONY: dep-save dep-restore test test-verbose build install clean
 
 all: test
 
@@ -43,27 +38,21 @@ test-verbose:
 	@ echo ""
 	@$(TEST_COMMAND) -test.v ./...
 
-test-integration:
-	$(TEST_COMMAND) ./... -tags integration
-
-vet:
-	go vet ./...
-
-lint:
-	golint ./...
-
 build:
-	@echo "==> Building $(EXECUTABLE) with ldflags '$(LDFLAGS)'"
-	@godep go build -ldflags $(LDFLAGS) $(BINARY)
+	@echo "==> Building executables"
+	@gox -osarch="linux/amd64 darwin/amd64" -output="{{.Dir}}-{{.OS}}-{{.Arch}}" ./...
 
 install:
-	@echo "==> Installing $(EXECUTABLE) with ldflags $(LDFLAGS)"
-	@godep go install -ldflags $(LDFLAGS) $(INSTALL)
+	@echo "==> Installing..."
+	@godep go install ./...
 
 package: build
-	@echo "==> Tar'ing up the binary"
-	@test -f t2 && tar czf tnator-$(PLATFORM)-amd64.tar.gz t2
+	@for p in $(PLATFORMS) ; do \
+		echo "==> Tar'ing up $$p/amd64 binary" ; \
+		test -f t2-$$p-amd64 && mv t2-$$p-amd64 t2 && tar czf tnator-$$p-amd64.tar.gz t2 ; \
+		rm -f t2 ; \
+	done
 
 clean:
 	go clean ./...
-	rm -rf t2
+	rm -rf t2* tnator*.tar.gz
