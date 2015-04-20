@@ -14,7 +14,7 @@ var (
 	quiet       = kingpin.Flag("quiet", "Enable quiet mode").Short('q').Bool()
 	printTmpDir = kingpin.Flag("print-tmp", "Print out TmpDir").Short('p').Bool()
 	forceTmp    = kingpin.Flag("force-tmp", "Force all generated files to be written to TmpDir").Short('F').Bool()
-	tmpDir      = kingpin.Flag("tmpdir", "Set TmpDir").Default(filepath.Join(os.TempDir(), "T2")).OverrideDefaultFromEnvar("T2_TMPDIR").Short('T').String()
+	tmpDir      = kingpin.Flag("tmpdir", "Set TmpDir").Default(filepath.Join(os.TempDir(), "T2")).PlaceHolder("\"$TMPDIR/T2\"").OverrideDefaultFromEnvar("T2_TMPDIR").Short('T').String()
 	rootDir     = kingpin.Arg("template-directory", "Directory under which there are templates").Required().ExistingDir()
 )
 
