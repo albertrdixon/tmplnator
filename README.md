@@ -25,40 +25,29 @@ RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<versi
 Help Menu:
 
 ```
-Usage of ./t2:
-  -bpool-size="": Size of write buffer pool
-  -default-dir="": Default output directory
-  -delete="": Remove templates after processing
-  -etcd-peers=: etcd peers in host:port (can be provided multiple times)
-  -namespace="": etcd key namespace
-  -template-dir="": Template directory
-  -threads="": Number of processing threads
-  -v="": Verbosity (0:quiet output, 1:default, 2:debug output)
-  -version="": show version
-```
+usage: t2-darwin-amd64 [<flags>] <template-directory>
 
-Defaults:
+Flags:
+  --help           Show help.
+  -d, --debug      Enable debug mode
+  -q, --quiet      Enable quiet mode
+  -p, --print-tmp  Print out TmpDir
+  -F, --force-tmp  Force all generated files to be written to TmpDir
+  -T, --tmpdir="/var/folders/pg/h3zftzc93rdb0mcr00hvckzr0000gn/T/T2"
+                   Set TmpDir
+  --version        Show application version.
 
-```go
-  Defaults = Config{
-    TmplDir:     "/templates",
-    DefaultDir:  filepath.Join(os.TempDir(), "T2"),
-    Delete:      false,
-    Threads:     4,
-    BpoolSize:   4,
-    Verbosity:   1,
-    ShowVersion: false,
-  }
+Args:
+  <template-directory>
+    Directory under which there are templates
 ```
 
 Super simple. Use the following methods in the template to set up how the file should be generated from the template: `dir` `mode` `user` `group`
 
 ```
 # example supervisor.conf template
-{{ dir "/etc/supervisor" }}
+{{ file "/etc/supervisor/supervisor.conf" }}
 {{ mode 0644 }}
-{{ user 0 }}
-{{ group 0 }}
 [supervisord]
 nodaemon  = true
 ...
@@ -66,11 +55,9 @@ nodaemon  = true
 
 Add your templates to some directory: `ADD configs /templates`
 
-Run tmplnator like so: `t2 -template-dir /templates`
+Run tmplnator like so: `t2 /templates`
 
 And that's it!
-
-**NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
 ## Template Functions
 
@@ -78,19 +65,13 @@ Access environment variables in the template with `.Env` like so `.Env.VARIABLE`
 
 Access etcd values with `.Get <key>` if key not found will look in ENV
 
-`dir "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. **NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
+`path "/path/to/destination/dir" <args...>`: Describe destination directory. Accepts printf style formatting in path string. **NOTE**: Templates without a described `dir` will use `default-dir` as their output directory.
 
-`name "name" <args...>`: Describe name of generated file. Accepts printf style formatting of name string.
+`file "name" <args...>`: Describe name of generated file. Will set path elements to the path. Accepts printf style formatting of name string.
 
 `mode <file_mode>`: Describe filemode for generated file
 
 `dir_mode <file_mode>`: Describe mode for any generated directories
-
-`user <uid>`: Describe uid for generated file
-
-`group <gid>`: Describe gid for generated file
-
-`file_info`: Returns a file.Info object for the current file
 
 `to_json <input>`: Marshal JSON string
 
