@@ -27,6 +27,7 @@ func (f FileWriter) writeFiles(files <-chan *File, fs afero.Fs) <-chan *File {
 			}
 			if err := WriteFile(file, fs); err != nil {
 				l.Errorf("%v: Failed to write %q: %v", f, file.Name(), err)
+				continue
 			}
 			out <- file
 		}
