@@ -11,19 +11,18 @@ import (
 	"reflect"
 	"strings"
 	"time"
+
+	"code.google.com/p/go-uuid/uuid"
 )
 
-func newFuncMap(fi *FileInfo) map[string]interface{} {
+func newFuncMap(f *FileInfo) map[string]interface{} {
 	return map[string]interface{}{
-		"dir":             fi.SetDir,
-		"name":            fi.SetName,
-		"mode":            fi.SetMode,
-		"dir_mode":        fi.SetDirmode,
-		"user":            fi.SetOwner,
-		"uid":             fi.SetUID,
-		"gid":             fi.SetGID,
-		"skip":            fi.Skip,
-		"source":          fi.Src,
+		"file":            f.SetFilename,
+		"path":            f.SetFullpath,
+		"mode":            f.SetMode,
+		"dir_mode":        f.SetDirmode,
+		"skip":            f.SetSkip,
+		"source":          f.Source,
 		"timestamp":       timestamp,
 		"to_json":         marshalJSON,
 		"from_json":       UnmarshalJSON,
@@ -46,6 +45,7 @@ func newFuncMap(fi *FileInfo) map[string]interface{} {
 		"upcase":          strings.ToUpper,
 		"trim_suffix":     strings.TrimSuffix,
 		"trim_space":      strings.TrimSpace,
+		"uuid":            uuid.New,
 	}
 }
 
