@@ -8,7 +8,7 @@ install:
 before_script: make dep-restore
 script: make test-verbose
 after_success:
-  - "cd $GOROOT/src && GOOS=darwin GOARCH=amd64 ./make.bash --no-clean"
+  - "cd $GOROOT/src && GOOS=darwin GOARCH=amd64 ./make.bash --no-clean && cd -"
   - make package
 
 deploy:
