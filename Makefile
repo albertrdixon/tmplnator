@@ -1,9 +1,9 @@
 PROJECT = github.com/albertrdixon/tmplnator
 INSTALL = $(PROJECT)/cmd/t2
 EXECUTABLE = "t2"
-LDFLAGS = "-X $(PROJECT)/config.Build $$(git rev-parse --short HEAD) -s"
+LDFLAGS = "-s"
 BINARY = "cmd/t2/t2.go"
-TEST_COMMAND = TNATOR_DIR=$(shell pwd)/fixtures godep go test
+TEST_COMMAND = godep go test
 PLATFORM = "$$(echo "$$(uname)" | tr '[A-Z]' '[a-z]')"
 VERSION = "$$(./t2 -v)"
 BUILD_ARGS = ""
