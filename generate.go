@@ -3,7 +3,6 @@ package tmplnator
 import (
 	"os"
 	"path/filepath"
-	"strings"
 	"sync"
 
 	l "github.com/Sirupsen/logrus"
@@ -49,15 +48,17 @@ func generate(dir string) []*File {
 	}
 
 	l.Infof("Found %d files to parse.", len(rawFiles))
-	p := FileParser(0)
-	pfc := p.parseTemplates(srcFs, rawFiles...)
+
+	done := make(chan struct{})
+	defer close(done)
+
+	pfc := FileParser(0).parseTemplates(done, srcFs, rawFiles...)
 	var wfc []<-chan *File
 	for i := 0; i < cpus; i++ {
-		w := FileWriter(i)
-		wfc = append(wfc, w.writeFiles(pfc, destFs))
+		wfc = append(wfc, FileWriter(i).writeFiles(done, pfc, destFs))
 	}
 
-	for file := range merge(wfc...) {
+	for file := range merge(done, wfc...) {
 		finishedFiles = append(finishedFiles, file)
 	}
 
@@ -87,31 +88,24 @@ func dirRead(root string, fs afero.Fs) []*File {
 			files = append(files, dirRead(path, fs)...)
 			continue
 		}
-		if !strings.Contains(item.Name(), "ignore") && !strings.Contains(item.Name(), "skip") {
+		if isTemplate(item.Name()) {
 			l.Debugf("Adding %q to file queue.", item.Name())
 			files = append(files, NewFile(path))
+		} else {
+			l.Debugf("Skipping %q.", item.Name())
 		}
 	}
 	return files
 }
 
-func merge(cs ...<-chan *File) <-chan *File {
+func merge(done <-chan struct{}, cs ...<-chan *File) <-chan *File {
 	var wg sync.WaitGroup
 	out := make(chan *File)
 
-	output := func(n int, c <-chan *File) {
-		for f := range c {
-			l.Debugf("gatherer (%d): Got Output: %v", n, f)
-			out <- f
-		}
-		l.Debug("Done")
-		wg.Done()
-	}
-	l.Debugf("WaitGroup: %d", len(cs))
+	l.Debugf("WaitGroup size: %d", len(cs))
 	wg.Add(len(cs))
 	for i, c := range cs {
-		l.Debugf("START: Result Gatherer (%d)", i)
-		go output(i, c)
+		go Gatherer(i).gatherOutput(&wg, done, out, c)
 	}
 
 	go func() {
