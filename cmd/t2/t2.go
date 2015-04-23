@@ -23,11 +23,11 @@ func main() {
 	kingpin.Parse()
 
 	l.SetOutput(os.Stdout)
-	l.SetLevel(l.InfoLevel)
+	tmplnator.LogLevel("info")
 	if *quiet {
-		l.SetLevel(l.FatalLevel)
+		tmplnator.LogLevel("fatal")
 	} else if *debug {
-		l.SetLevel(l.DebugLevel)
+		tmplnator.LogLevel("debug")
 	}
 
 	if *forceTmp {
@@ -37,8 +37,7 @@ func main() {
 		tmplnator.TmpDir = *tmpDir
 	}
 
-	tmplnator.InitFs(false, false)
-	tmplnator.Generate(*rootDir)
+	tmplnator.RealGen(*rootDir)
 	if *printTmpDir {
 		println(tmplnator.TmpDir)
 	}
