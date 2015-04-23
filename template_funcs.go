@@ -21,7 +21,6 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"path":            f.SetFullpath,
 		"mode":            f.SetMode,
 		"dir_mode":        f.SetDirmode,
-		"skip":            f.SetSkip,
 		"source":          f.Source,
 		"timestamp":       timestamp,
 		"to_json":         marshalJSON,

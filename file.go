@@ -35,7 +35,16 @@ type FileInfo struct {
 	dirmode  os.FileMode
 	modtime  time.Time
 	size     int64
-	skip     bool
+}
+
+func isTemplate(filename string) (answer bool) {
+	for _, ext := range extensions {
+		if strings.HasSuffix(filename, ext) {
+			answer = true
+			break
+		}
+	}
+	return
 }
 
 func NewFile(path string) *File {
@@ -62,7 +71,6 @@ func NewFile(path string) *File {
 			dirmode:  os.FileMode(0755),
 			modtime:  time.Time{},
 			size:     0,
-			skip:     false,
 		},
 	}
 
@@ -82,7 +90,6 @@ func (f *File) TemplateName() string { return f.template.Name() }
 func (f *File) Name() string         { return f.info.Name() }
 func (f *File) FullPath() string     { return f.info.fullPath }
 func (f *File) Dir() string          { return filepath.Dir(f.FullPath()) }
-func (f *File) Skip() bool           { return f.info.skip }
 func (f *File) Info() *FileInfo      { return f.info }
 func (f *File) String() string {
 	return fmt.Sprintf("(template)%s (file)%s", f.TemplateName(), f.FullPath())
@@ -129,12 +136,6 @@ func (f *FileInfo) SetDirmode(mode os.FileMode) string {
 	return ""
 }
 
-func (f *FileInfo) SetSkip() string {
-	l.Debugf("%v: Setting skip to true")
-	f.skip = true
-	return ""
-}
-
 func (f *File) Open() (afero.File, error) {
 	return destFs.Open(f.FullPath())
 }
@@ -157,11 +158,12 @@ func ParseTemplate(f *File, fs afero.Fs) error {
 	}()
 
 	fh, err := fs.Open(f.template.Name())
+	defer fh.Close()
+
 	if err != nil {
 		f.errs = append(f.errs, err)
 		return err
 	}
-	defer fh.Close()
 
 	var b bytes.Buffer
 	if _, err := b.ReadFrom(fh); err != nil {
@@ -189,10 +191,6 @@ func WriteFile(f *File, fs afero.Fs) error {
 		return e
 	}
 
-	if f.Skip() {
-		return nil
-	}
-
 	if _, err := fs.Stat(f.Dir()); err != nil {
 		if err = fs.MkdirAll(f.Dir(), f.info.dirmode); err != nil {
 			e := NewFileError(f, err.Error())
@@ -202,12 +200,17 @@ func WriteFile(f *File, fs afero.Fs) error {
 	}
 
 	gf, err := fs.Create(f.FullPath())
+	defer gf.Close()
+
 	if err != nil {
 		e := NewFileError(f, err.Error())
 		f.errs = append(f.errs, e)
 		return e
 	}
 
+	if l.GetLevel() == l.DebugLevel {
+		l.Debugf("%q CONTENT: %s", f.Name(), b.String())
+	}
 	n, err := b.WriteTo(gf)
 	if err != nil {
 		e := NewFileError(f, err.Error())
