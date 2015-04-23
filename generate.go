@@ -3,35 +3,14 @@ package tmplnator
 import (
 	"os"
 	"path/filepath"
-	"runtime"
 	"strings"
 	"sync"
 
 	l "github.com/Sirupsen/logrus"
-	"github.com/albertrdixon/tmplnator/backend"
 	"github.com/spf13/afero"
 )
 
-var (
-	errChan chan error
-	data    *Data
-	srcFs   afero.Fs
-	destFs  afero.Fs
-
-	// Backend is the Key/Value store for Data
-	Backend backend.Backend
-
-	// ForceTemp will force all templates to be written to TmpDir if true
-	ForceTemp = false
-
-	// TmpDir is the tmpdir we will use
-	TmpDir = filepath.Join(os.TempDir(), "T2")
-
-	cpus = runtime.NumCPU()
-	pkg  = "tmplnator"
-)
-
-func InitFs(srcInMem, destInMem bool) {
+func initFs(srcInMem, destInMem bool) {
 	mem := &afero.MemMapFs{}
 	os := &afero.OsFs{}
 
@@ -50,12 +29,8 @@ func InitFs(srcInMem, destInMem bool) {
 	}
 }
 
-func ClearFs() {
-	srcFs, destFs = nil, nil
-}
-
 // Generate is the main entrypoint. It will parse any templates found under dir.
-func Generate(dir string) []*File {
+func generate(dir string) []*File {
 	l.Infof("Starting generator. Template directory: %q", dir)
 	var rawFiles []*File
 	var finishedFiles []*File

@@ -139,6 +139,16 @@ func (f *File) Open() (afero.File, error) {
 	return destFs.Open(f.FullPath())
 }
 
+func (f *File) Read(p []byte) (n int, err error) {
+	fh, err := f.Open()
+	if err != nil {
+		return
+	}
+
+	n, err = fh.Read(p)
+	return
+}
+
 func ParseTemplate(f *File, fs afero.Fs) error {
 	defer func() {
 		if r := recover(); r != nil {
