@@ -16,7 +16,7 @@ func (g Gatherer) String() string {
 func (g Gatherer) gatherOutput(wg *sync.WaitGroup, done <-chan struct{}, out chan *File, c <-chan *File) {
 	defer wg.Done()
 	defer l.Debugf("%v: Exiting", g)
-	l.Debugf("%v: Stating", g)
+	l.Debugf("%v: Starting", g)
 	for f := range c {
 		select {
 		case out <- f:
