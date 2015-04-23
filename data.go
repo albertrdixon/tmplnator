@@ -21,15 +21,12 @@ func NewData(be backend.Backend) *Data {
 
 // Get returns the Value associated with Key from the Backend or from ENV
 func (d *Data) Get(key string) string {
-	l.WithField("key", key).Debug("Lookup key")
+	l.Debugf("Lookup key %q", key)
 
 	if d.store != nil {
 		key = strings.ToLower(key)
 		if val, err := d.store.Get(key); err == nil {
-			l.WithFields(l.Fields{
-				"key":   key,
-				"value": val,
-			}).Debug("Found in backend")
+			l.Debugf("Found key %q in backend: %q", key, val)
 			return val
 		}
 	}
