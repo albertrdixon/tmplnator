@@ -20,16 +20,6 @@
 			"Rev": "6b4e7dc5e3143b85ea77909c72caf89416fc2915"
 		},
 		{
-			"ImportPath": "github.com/coreos/etcd/etcdserver/etcdhttp/httptypes",
-			"Comment": "v2.0.0-30-gafb14a3",
-			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"
-		},
-		{
-			"ImportPath": "github.com/coreos/etcd/pkg/types",
-			"Comment": "v2.0.0-30-gafb14a3",
-			"Rev": "afb14a3e7a80899e90aa0aa6e8624fdd9ba4bc70"
-		},
-		{
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
 			"Comment": "v0.4.6-4-gadcbc79",
 			"Rev": "adcbc79ef9ef8ce64b43b63b9fcf9b6cb3c41c7e"
@@ -37,6 +27,14 @@
 		{
 			"ImportPath": "github.com/spf13/afero",
 			"Rev": "139e50e29af82d1d998f0e38fabf4947c668acc6"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/assert",
+			"Rev": "33a31e5dbed8302d5ab7e6d12b416e95c2c4ebc0"
+		},
+		{
+			"ImportPath": "github.com/stretchr/testify/require",
+			"Rev": "33a31e5dbed8302d5ab7e6d12b416e95c2c4ebc0"
 		},
 		{
 			"ImportPath": "gopkg.in/alecthomas/kingpin.v1",
