@@ -40,7 +40,7 @@ func (d *Data) Get(key string) string {
 	return ""
 }
 
-func (d *Data) KeyPrefix(p string) { d.prefix = p }
+func (d *Data) KeyPrefix(p string) string { d.prefix = p; return "" }
 
 func envMap() map[string]string {
 	env := make(map[string]string, len(os.Environ()))
