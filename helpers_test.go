@@ -5,6 +5,7 @@ import (
 	"os"
 	"testing"
 
+	"github.com/albertrdixon/tmplnator/backend"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
 )
@@ -18,6 +19,7 @@ func TestRenderTemplate(te *testing.T) {
 	os.Setenv("foo", "bar")
 	os.Setenv("slice", "0,1,2")
 	os.Setenv("json", `{"key": "value"}`)
+	Backend = backend.NewMock(map[string]string{"/test/vars/bif": "Generated"}, nil)
 	data = NewData(nil)
 	var tests = []struct {
 		name    string

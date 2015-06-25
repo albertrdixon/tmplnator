@@ -81,6 +81,22 @@ func toJSON(i interface{}) (string, error) {
 	return strings.TrimSpace(b.String()), nil
 }
 
+func concat(a interface{}, bs ...interface{}) string {
+	switch a := a.(type) {
+	default:
+		return ""
+	case string:
+		b := new(bytes.Buffer)
+		b.WriteString(a)
+		for _, s := range bs {
+			if s, ok := s.(string); ok {
+				b.WriteString(s)
+			}
+		}
+		return b.String()
+	}
+}
+
 func exists(p interface{}) (bool, error) {
 	if p, ok := p.(string); ok {
 		if _, e := os.Stat(p); e != nil {
