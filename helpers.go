@@ -39,6 +39,7 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"titleize":    titleize,
 		"strip":       trimSpace,
 		"split":       split,
+		"replace":     replace,
 		"trim":        trim,
 		"trim_suffix": trimSuffix,
 		"fields":      fields,
@@ -201,6 +202,15 @@ func join(a, b interface{}) (interface{}, error) {
 			return strings.Join(a, b), nil
 		}
 		return "", errors.New("The separator for strings.Join must be a string")
+	}
+}
+
+func replace(s interface{}, a, b string, n int) interface{} {
+	switch s := s.(type) {
+	default:
+		return s
+	case string:
+		return strings.Replace(s, a, b, n)
 	}
 }
 
