@@ -5,6 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"testing"
+
+	"github.com/albertrdixon/tmplnator/backend"
 )
 
 var testDir = "fixtures/test/"
@@ -13,6 +15,8 @@ var expected = []byte("Generated")
 func TestGenerate(t *testing.T) {
 	LogLevel("fatal")
 	os.Setenv("FOO", "Generated")
+	b := backend.NewMock(map[string]string{"/test/vars/bif": "Generated"}, nil)
+	Backend = b
 	files := MemGen(testDir)
 	if len(files) < 5 {
 		t.Errorf("Expected 5 files generated, got %d", len(files))
