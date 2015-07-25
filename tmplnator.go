@@ -47,6 +47,10 @@ func RealGen(root string) []*File {
 	return generate(root)
 }
 
+func GetFs() (afero.Fs, afero.Fs) {
+	return srcFs, destFs
+}
+
 func ClearFs() {
 	srcFs, destFs = nil, nil
 }

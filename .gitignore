@@ -1,6 +1,5 @@
 .DS*
-*.tar.gz
-t2*
-!t2/
+*.tgz
 out/
 *.env
+bin

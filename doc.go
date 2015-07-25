@@ -1,4 +1,5 @@
 // Package tmplnator generates files from templates under a specified directory
 package tmplnator
 
-const Version = "v2.1.0"
+// Version is the version
+const Version = "v2.2.0"
