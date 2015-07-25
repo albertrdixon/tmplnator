@@ -1,5 +1,8 @@
 PROJECT = github.com/albertrdixon/tmplnator
 TEST_COMMAND = godep go test
+EXECUTABLE = t2
+PKG = cmd/t2/t2.go
+LDFLAGS = -s
 PLATFORMS = linux darwin
 BUILD_ARGS = ""
 
@@ -42,7 +45,8 @@ test-verbose:
 
 build:
 	@echo "==> Building executables"
-	@gox -osarch="linux/amd64 darwin/amd64" -output="{{.Dir}}-{{.OS}}-{{.Arch}}" ./...
+	@ GOOS=linux CGO_ENABLED=0 godep go build -a -installsuffix cgo -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-linux $(PKG)
+	@ GOOS=darwin CGO_ENABLED=0 godep go build -a -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-darwin $(PKG)
 
 install:
 	@echo "==> Installing..."
@@ -51,7 +55,7 @@ install:
 package: build
 	@for p in $(PLATFORMS) ; do \
 		echo "==> Tar'ing up $$p/amd64 binary" ; \
-		test -f t2-$$p-amd64 && mv t2-$$p-amd64 t2 && tar czf tnator-$$p-amd64.tar.gz t2 ; \
+		test -f t2-$$p && mv t2-$$p t2 && tar czf t2-$$p.tgz t2 ; \
 		rm -f t2 ; \
 	done
 
