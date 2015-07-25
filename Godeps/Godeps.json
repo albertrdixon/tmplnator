@@ -7,13 +7,13 @@
 	"Deps": [
 		{
 			"ImportPath": "code.google.com/p/go-uuid/uuid",
-			"Comment": "null-12",
-			"Rev": "7dda39b2e7d5e265014674c5af696ba4186679e9"
+			"Comment": "null-15",
+			"Rev": "35bc42037350f0078e3c974c6ea690f1926603ab"
 		},
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
-			"Comment": "v0.6.6-2-g2cea0f0",
-			"Rev": "2cea0f0d141f56fae06df5b813ec4119d1c8ccbd"
+			"Comment": "v0.7.3",
+			"Rev": "55eb11d21d2a31a3cc93838241d04800f52e823d"
 		},
 		{
 			"ImportPath": "github.com/alecthomas/units",
@@ -21,8 +21,8 @@
 		},
 		{
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
-			"Comment": "v0.4.6-4-gadcbc79",
-			"Rev": "adcbc79ef9ef8ce64b43b63b9fcf9b6cb3c41c7e"
+			"Comment": "v2.0.0-22-g9847b93",
+			"Rev": "9847b93751a5fbaf227b893d172cee0104ac6427"
 		},
 		{
 			"ImportPath": "github.com/spf13/afero",
@@ -30,15 +30,17 @@
 		},
 		{
 			"ImportPath": "github.com/stretchr/testify/assert",
-			"Rev": "33a31e5dbed8302d5ab7e6d12b416e95c2c4ebc0"
+			"Comment": "v1.0-17-g089c718",
+			"Rev": "089c7181b8c728499929ff09b62d3fdd8df8adff"
 		},
 		{
 			"ImportPath": "github.com/stretchr/testify/require",
-			"Rev": "33a31e5dbed8302d5ab7e6d12b416e95c2c4ebc0"
+			"Comment": "v1.0-17-g089c718",
+			"Rev": "089c7181b8c728499929ff09b62d3fdd8df8adff"
 		},
 		{
 			"ImportPath": "github.com/ugorji/go/codec",
-			"Rev": "821cda7e48749cacf7cad2c6ed01e96457ca7e9d"
+			"Rev": "03e33114d4d60a1f37150325e15f51b0fa6fc4f6"
 		},
 		{
 			"ImportPath": "gopkg.in/alecthomas/kingpin.v1",

@@ -3,30 +3,30 @@ package backend
 import (
 	"strings"
 
-	e "github.com/coreos/go-etcd/etcd"
+	"github.com/coreos/go-etcd/etcd"
 )
 
 const (
 	prefix = "/t2"
 )
 
-type etcd struct {
-	client    *e.Client
+type etcdb struct {
+	client    *etcd.Client
 	namespace string
 }
 
 func newEtcd(ns string, m []string) Backend {
-	return &etcd{
-		client:    e.NewClient(m),
+	return &etcdb{
+		client:    etcd.NewClient(m),
 		namespace: strings.Join([]string{prefix, ns}, "/"),
 	}
 }
 
-func (et *etcd) key(k string) string {
+func (et *etcdb) key(k string) string {
 	return strings.Join([]string{et.namespace, k}, "/")
 }
 
-func (et *etcd) Get(key string) (val string, err error) {
+func (et *etcdb) Get(key string) (val string, err error) {
 	response, err := et.client.Get(et.key(key), false, false)
 	if err != nil {
 		return
@@ -36,7 +36,7 @@ func (et *etcd) Get(key string) (val string, err error) {
 	return
 }
 
-func (et *etcd) GetAll(key string) (vals []string, err error) {
+func (et *etcdb) GetAll(key string) (vals []string, err error) {
 	response, err := et.client.Get(et.key(key), true, false)
 	if err != nil {
 		return
