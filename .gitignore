@@ -1,7 +1,5 @@
 .DS*
 *.tar.gz
-t2*
-!t2/
 out/
 *.env
 bin
