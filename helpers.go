@@ -32,6 +32,7 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"-e":          exists,
 		"has_key":     hasKey,
 		"def":         def,
+		"default":     def,
 		"url":         parseURL,
 		"sha":         hash,
 		"downcase":    downcase,

@@ -56,7 +56,8 @@ package: build
 	@for p in $(PLATFORMS) ; do \
 		echo "==> Tar'ing up $$p/amd64 binary" ; \
 		test -f bin/$(EXECUTABLE)-$$p && \
-		tar czf $(EXECUTABLE)-$$p.tgz bin/$(EXECUTABLE)-$$p ; \
+		mv bin/$(EXECUTABLE)-$$p t2 && \
+		tar czf $(EXECUTABLE)-$$p.tgz t2 ; \
 	done
 
 clean:
