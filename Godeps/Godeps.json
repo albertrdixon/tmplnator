@@ -43,6 +43,11 @@
 			"Rev": "792786c7400a136282c1664665ae0a8db921c6c2"
 		},
 		{
+			"ImportPath": "github.com/satori/go.uuid",
+			"Comment": "v1.1.0-1-g0aa62d5",
+			"Rev": "0aa62d5ddceb50dbcb909d790b5345affd3669b6"
+		},
+		{
 			"ImportPath": "github.com/spf13/afero",
 			"Rev": "52e4a6cfac46163658bd4f123c49b6ee7dc75f78"
 		},
