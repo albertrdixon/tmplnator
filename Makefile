@@ -5,6 +5,7 @@ PKG = cmd/t2/t2.go
 LDFLAGS = -s
 PLATFORMS = linux darwin
 BUILD_ARGS = ""
+TOOLS = glide
 
 .PHONY: save restore test test-verbose build install package clean
 
@@ -21,6 +22,9 @@ help:
 	@echo "  install"
 	@echo "  package"
 	@echo "  clean"
+
+tools:
+	go get -u -v -ldflags -s github.com/Masterminds/glide
 
 save:
 	@echo "---> Saving dependencies..."

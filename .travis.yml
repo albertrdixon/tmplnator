@@ -2,9 +2,7 @@ os: linux
 language: go
 go: 1.7.1
 
-install:
-  - curl https://glide.sh/get | sh
-  - go get github.com/mitchellh/gox
+install: make tools
 before_script: make restore
 script: make test-verbose
 after_success: make package
