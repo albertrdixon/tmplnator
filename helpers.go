@@ -29,7 +29,6 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"get":         get,
 		"eql":         reflect.DeepEqual,
 		"exists":      exists,
-		"-e":          exists,
 		"has_key":     hasKey,
 		"def":         def,
 		"default":     def,
@@ -47,7 +46,7 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"has_suffix":  hasSuffix,
 		"contains":    contains,
 		"join":        join,
-		"uuid":        uuid.New,
+		"uuid":        uuid.NewV4,
 		"truncate":    truncate,
 	}
 }

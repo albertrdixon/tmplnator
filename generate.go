@@ -10,20 +10,26 @@ import (
 )
 
 func initFs(srcInMem, destInMem bool) {
-	mem := &afero.MemMapFs{}
-	os := &afero.OsFs{}
+	var (
+		osFs  afero.Fs = afero.NewOsFs()
+		memFs afero.Fs = afero.NewMemMapFs()
+	)
 
 	if srcFs == nil {
-		srcFs = os
+		l.Debugf("Initializing Source FS (InMem: %q)", srcInMem)
 		if srcInMem {
-			srcFs = mem
+			srcFs = memFs
+		} else {
+			srcFs = osFs
 		}
 	}
 
 	if destFs == nil {
-		destFs = os
+		l.Debugf("Initializing Destination FS (InMem: %q)", destInMem)
 		if destInMem {
-			destFs = mem
+			destFs = memFs
+		} else {
+			destFs = osFs
 		}
 	}
 }
@@ -75,7 +81,7 @@ func dirRead(root string, fs afero.Fs) []*File {
 	var files []*File
 	l.Debugf("Reading dir %s", root)
 
-	items, err := afero.ReadDir(root, fs)
+	items, err := afero.ReadDir(fs, root)
 	if err != nil {
 		l.Errorf("Unable to read dir %q: %v", root, err)
 		return files

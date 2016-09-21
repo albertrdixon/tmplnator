@@ -3,6 +3,7 @@ package main
 import (
 	"os"
 	"path/filepath"
+	"runtime"
 
 	l "github.com/Sirupsen/logrus"
 	"github.com/albertrdixon/tmplnator"
@@ -19,6 +20,7 @@ var (
 )
 
 func main() {
+	runtime.GOMAXPROCS(runtime.NumCPU())
 	kingpin.Version(tmplnator.Version)
 	kingpin.Parse()
 
