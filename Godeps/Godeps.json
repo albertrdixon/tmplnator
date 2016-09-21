@@ -3,17 +3,13 @@
 	"GoVersion": "go1.6",
 	"GodepVersion": "v62",
 	"Packages": [
-		"./..."
+		"."
 	],
 	"Deps": [
 		{
 			"ImportPath": "github.com/Sirupsen/logrus",
 			"Comment": "v0.10.0-38-g3ec0642",
 			"Rev": "3ec0642a7fb6488f65b06f9040adc67e3990296a"
-		},
-		{
-			"ImportPath": "github.com/alecthomas/units",
-			"Rev": "2efee857e7cfd4f3d0138cc3cbb1b4966962b93a"
 		},
 		{
 			"ImportPath": "github.com/coreos/go-etcd/etcd",
@@ -100,11 +96,6 @@
 		{
 			"ImportPath": "golang.org/x/text/unicode/norm",
 			"Rev": "2df9074612f50810d82416d2229398a1e7188c5c"
-		},
-		{
-			"ImportPath": "gopkg.in/alecthomas/kingpin.v1",
-			"Comment": "v1.3.7",
-			"Rev": "45f9714aa86a9624491adeaab1e9df1baf84dd38"
 		}
 	]
 }
