@@ -7,7 +7,7 @@ import (
 
 	l "github.com/Sirupsen/logrus"
 	"github.com/albertrdixon/tmplnator"
-	"gopkg.in/alecthomas/kingpin.v1"
+	"gopkg.in/alecthomas/kingpin.v2"
 )
 
 var (
