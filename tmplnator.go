@@ -39,6 +39,8 @@ func LogLevel(level string) {
 
 func MemGen(root string) []*File {
 	initFs(false, true)
+	l.Debugf("Initialized Source FS: %v", srcFs)
+	l.Debugf("Initialized Destination FS: %v", destFs)
 	return generate(root)
 }
 

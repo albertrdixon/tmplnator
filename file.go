@@ -191,7 +191,13 @@ func WriteFile(f *File, fs afero.Fs) error {
 		return e
 	}
 
-	if _, err := fs.Stat(f.Dir()); err != nil {
+	exist, err := afero.DirExists(fs, f.Dir())
+	if err != nil {
+		e := NewFileError(f, err.Error())
+		f.errs = append(f.errs, e)
+		return e
+	}
+	if !exist {
 		if err = fs.MkdirAll(f.Dir(), f.info.dirmode); err != nil {
 			e := NewFileError(f, err.Error())
 			f.errs = append(f.errs, e)
@@ -211,13 +217,14 @@ func WriteFile(f *File, fs afero.Fs) error {
 	if l.GetLevel() == l.DebugLevel {
 		l.Debugf("%q CONTENT: %s", f.Name(), b.String())
 	}
-	n, err := b.WriteTo(gf)
+
+	err = afero.WriteFile(fs, f.FullPath(), b.Bytes(), f.info.Mode())
 	if err != nil {
 		e := NewFileError(f, err.Error())
 		f.errs = append(f.errs, e)
 		return e
 	}
-	f.info.size = n
-	fs.Chmod(f.FullPath(), f.info.Mode())
+	stat, _ := fs.Stat(f.FullPath())
+	f.info.size = stat.Size()
 	return nil
 }

@@ -13,7 +13,7 @@ import (
 	"strings"
 	"time"
 
-	"code.google.com/p/go-uuid/uuid"
+	uuid "github.com/satori/go.uuid"
 )
 
 func newFuncMap(f *FileInfo) map[string]interface{} {
@@ -29,7 +29,6 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"get":         get,
 		"eql":         reflect.DeepEqual,
 		"exists":      exists,
-		"-e":          exists,
 		"has_key":     hasKey,
 		"def":         def,
 		"default":     def,
@@ -47,7 +46,8 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"has_suffix":  hasSuffix,
 		"contains":    contains,
 		"join":        join,
-		"uuid":        uuid.New,
+		"uuid":        uuid.NewV4,
+		"truncate":    truncate,
 	}
 }
 
@@ -62,6 +62,20 @@ func downcase(s interface{}) interface{}      { return sm(strings.ToLower, s) }
 func upcase(s interface{}) interface{}        { return sm(strings.ToUpper, s) }
 func titleize(s interface{}) interface{}      { return sm(strings.Title, s) }
 func trimSpace(s interface{}) interface{}     { return sm(strings.TrimSpace, s) }
+
+func truncate(i int, s interface{}) interface{} {
+	switch s := s.(type) {
+	case string:
+		if i >= 0 && i <= len(s) {
+			return s[:i]
+		}
+	case []byte:
+		if i >= 0 && i <= len(s) {
+			return s[:i]
+		}
+	}
+	return s
+}
 
 func fromJSON(d interface{}) (j map[string]interface{}, e error) {
 	switch d := d.(type) {

@@ -1,0 +1,19 @@
+package: github.com/albertrdixon/tmplnator
+import:
+- package: github.com/Sirupsen/logrus
+  version: ~0.10.0
+- package: github.com/coreos/go-etcd
+  version: ~2.0.0
+  subpackages:
+  - etcd
+- package: github.com/satori/go.uuid
+  version: ~1.1.0
+- package: github.com/spf13/afero
+- package: gopkg.in/alecthomas/kingpin.v2
+  version: ~2.2.3
+testImport:
+- package: github.com/stretchr/testify
+  version: ~1.1.3
+  subpackages:
+  - assert
+  - require

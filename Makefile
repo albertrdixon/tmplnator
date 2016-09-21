@@ -1,66 +1,67 @@
 PROJECT = github.com/albertrdixon/tmplnator
-TEST_COMMAND = godep go test
+TEST_COMMAND = go test
 EXECUTABLE = t2
 PKG = cmd/t2/t2.go
 LDFLAGS = -s
 PLATFORMS = linux darwin
 BUILD_ARGS = ""
+TOOLS = glide
 
-.PHONY: dep-save dep-restore test test-verbose build install clean
+.PHONY: save restore test test-verbose build install package clean
 
-all: test
+all: test install
 
 help:
 	@echo "Available targets:"
 	@echo ""
-	@echo "  dep-save"
-	@echo "  dep-restore"
+	@echo "  save"
+	@echo "  restore"
 	@echo "  test"
 	@echo "  test-verbose"
-	@echo "  test-integration"
-	@echo "  vet"
-	@echo "  lint"
 	@echo "  build"
-	@echo "  build-docker"
 	@echo "  install"
+	@echo "  package"
 	@echo "  clean"
 
-dep-save:
-	@echo "==> Saving dependencies..."
-	@godep save ./...
+tools:
+	go get -u -v -ldflags -s github.com/Masterminds/glide
 
-dep-restore:
-	@echo "==> Restoring dependencies..."
-	@godep restore
+save:
+	@echo "---> Saving dependencies..."
+	@glide update
+
+restore:
+	@echo "---> Restoring dependencies..."
+	@glide install
 
 test:
-	@echo "==> Running all tests"
+	@echo "---> Running all tests"
 	@echo ""
-	@$(TEST_COMMAND) ./...
+	@$(TEST_COMMAND) .
 
 test-verbose:
-	@echo "==> Running all tests (verbose output)"
+	@echo "---> Running all tests (verbose output)"
 	@ echo ""
-	@$(TEST_COMMAND) -test.v ./...
+	@$(TEST_COMMAND) -test.v .
 
 build:
-	@echo "==> Building executables"
-	@ GOOS=linux CGO_ENABLED=0 godep go build -a -installsuffix cgo -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-linux $(PKG)
-	@ GOOS=darwin CGO_ENABLED=0 godep go build -a -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-darwin $(PKG)
+	@echo "---> Building executables"
+	@ GOOS=linux CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-linux $(PKG)
+	@ GOOS=darwin CGO_ENABLED=0 go build -a -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-darwin $(PKG)
 
 install:
-	@echo "==> Installing..."
-	@godep go install ./...
+	@echo "---> Installing..."
+	@CGO_ENABLED=0 go install -a -ldflags $(LDFLAGS) $(PKG)
 
 package: build
 	@for p in $(PLATFORMS) ; do \
-		echo "==> Tar'ing up $$p/amd64 binary" ; \
+		echo "---> Tar'ing up $$p/amd64 binary" ; \
 		test -f bin/$(EXECUTABLE)-$$p && \
-		mv bin/$(EXECUTABLE)-$$p t2 && \
+		cp bin/$(EXECUTABLE)-$$p t2 && \
 		tar czf $(EXECUTABLE)-$$p.tgz t2 ; \
 	done
 
 clean:
-	@echo "==> Cleaning up workspace..."
+	@echo "---> Cleaning up workspace..."
 	@go clean ./...
 	@rm -rf t2* tnator*.tar.gz

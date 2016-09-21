@@ -16,9 +16,11 @@ Enter tmplnator. Templates describe where they should go, what their file mode s
 In your Dockerfile do something like:
 
 ```
-RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<version>/tnator-linux-amd64.tar.gz |\
+RUN curl -#kL https://github.com/albertrdixon/tmplnator/releases/download/<version>/tnator-linux.tgz |\
     tar xvz -C /usr/local/bin
 ```
+
+If you are installing on your mac for testing or whatever, just grab the `darwin` version.
 
 ## Usage
 
