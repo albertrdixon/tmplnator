@@ -26,40 +26,41 @@ help:
 	@echo "  clean"
 
 dep-save:
-	@echo "==> Saving dependencies..."
-	@godep save ./...
+	@echo "---> Saving dependencies..."
+	@godep save .
 
 dep-restore:
-	@echo "==> Restoring dependencies..."
+	@echo "---> Restoring dependencies..."
 	@godep restore
 
 test:
-	@echo "==> Running all tests"
+	@echo "---> Running all tests"
 	@echo ""
 	@$(TEST_COMMAND) .
 
 test-verbose:
-	@echo "==> Running all tests (verbose output)"
+	@echo "---> Running all tests (verbose output)"
 	@ echo ""
 	@$(TEST_COMMAND) -test.v .
 
 build:
-	@echo "==> Building executables"
+	@echo "---> Building executables"
 	@ GOOS=linux CGO_ENABLED=0 go build -a -installsuffix cgo -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-linux $(PKG)
 	@ GOOS=darwin CGO_ENABLED=0 go build -a -ldflags $(LDFLAGS) -o bin/$(EXECUTABLE)-darwin $(PKG)
 
 install:
-	@echo "==> Installing..."
-	@godep go install ./...
+	@echo "---> Installing..."
+	@go install .
 
 package: build
 	@for p in $(PLATFORMS) ; do \
-		echo "==> Tar'ing up $$p/amd64 binary" ; \
+		echo "---> Tar'ing up $$p/amd64 binary" ; \
 		test -f bin/$(EXECUTABLE)-$$p && \
-		tar czf $(EXECUTABLE)-$$p.tgz bin/$(EXECUTABLE)-$$p ; \
+		cp bin/$(EXECUTABLE)-$$p t2 && \
+		tar czf $(EXECUTABLE)-$$p.tgz t2 ; \
 	done
 
 clean:
-	@echo "==> Cleaning up workspace..."
+	@echo "---> Cleaning up workspace..."
 	@go clean ./...
 	@rm -rf t2* tnator*.tar.gz
