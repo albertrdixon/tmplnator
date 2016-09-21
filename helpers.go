@@ -12,8 +12,6 @@ import (
 	"reflect"
 	"strings"
 	"time"
-
-	"code.google.com/p/go-uuid/uuid"
 )
 
 func newFuncMap(f *FileInfo) map[string]interface{} {

@@ -46,6 +46,7 @@ func TestRenderTemplate(te *testing.T) {
 		{"has_suffix", `{{ printf "%t" (has_suffix .Env.slice "2") }}`, "true", true},
 		{"split & join", `{{ join (split .Env.slice ",") "-" }}`, "0-1-2", true},
 		{"join (fail)", `{{ join (split .Env.slice ",") 2 }}`, "", false},
+		{"truncate", `{{ truncate 3 "foobar" }}`, "foo", true},
 	}
 
 	for i, t := range tests {
