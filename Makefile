@@ -27,11 +27,11 @@ help:
 
 dep-save:
 	@echo "---> Saving dependencies..."
-	@godep save .
+	@godep save -v ./...
 
 dep-restore:
 	@echo "---> Restoring dependencies..."
-	@godep restore
+	@godep restore -v
 
 test:
 	@echo "---> Running all tests"
