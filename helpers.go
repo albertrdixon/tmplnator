@@ -32,6 +32,7 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"-e":          exists,
 		"has_key":     hasKey,
 		"def":         def,
+		"default":     def,
 		"url":         parseURL,
 		"sha":         hash,
 		"downcase":    downcase,
@@ -47,6 +48,7 @@ func newFuncMap(f *FileInfo) map[string]interface{} {
 		"contains":    contains,
 		"join":        join,
 		"uuid":        uuid.New,
+		"truncate":    truncate,
 	}
 }
 
@@ -61,6 +63,20 @@ func downcase(s interface{}) interface{}      { return sm(strings.ToLower, s) }
 func upcase(s interface{}) interface{}        { return sm(strings.ToUpper, s) }
 func titleize(s interface{}) interface{}      { return sm(strings.Title, s) }
 func trimSpace(s interface{}) interface{}     { return sm(strings.TrimSpace, s) }
+
+func truncate(i int, s interface{}) interface{} {
+	switch s := s.(type) {
+	case string:
+		if i >= 0 && i <= len(s) {
+			return s[:i]
+		}
+	case []byte:
+		if i >= 0 && i <= len(s) {
+			return s[:i]
+		}
+	}
+	return s
+}
 
 func fromJSON(d interface{}) (j map[string]interface{}, e error) {
 	switch d := d.(type) {
