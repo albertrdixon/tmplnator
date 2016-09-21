@@ -5,7 +5,7 @@ go: 1.7.1
 install:
   - curl https://glide.sh/get | sh
   - go get github.com/mitchellh/gox
-before_script: make dep-restore
+before_script: make restore
 script: make test-verbose
 after_success: make package
 

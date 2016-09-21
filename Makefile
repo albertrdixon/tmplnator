@@ -6,32 +6,29 @@ LDFLAGS = -s
 PLATFORMS = linux darwin
 BUILD_ARGS = ""
 
-.PHONY: dep-save dep-restore test test-verbose build install clean
+.PHONY: save restore test test-verbose build install package clean
 
-all: test
+all: test install
 
 help:
 	@echo "Available targets:"
 	@echo ""
-	@echo "  dep-save"
-	@echo "  dep-restore"
+	@echo "  save"
+	@echo "  restore"
 	@echo "  test"
 	@echo "  test-verbose"
-	@echo "  test-integration"
-	@echo "  vet"
-	@echo "  lint"
 	@echo "  build"
-	@echo "  build-docker"
 	@echo "  install"
+	@echo "  package"
 	@echo "  clean"
 
-dep-save:
+save:
 	@echo "---> Saving dependencies..."
-	@godep save -v ./...
+	@glide update
 
-dep-restore:
+restore:
 	@echo "---> Restoring dependencies..."
-	@godep restore -v
+	@glide install
 
 test:
 	@echo "---> Running all tests"
@@ -50,7 +47,7 @@ build:
 
 install:
 	@echo "---> Installing..."
-	@go install .
+	@CGO_ENABLED=0 go install -a -ldflags $(LDFLAGS) $(PKG)
 
 package: build
 	@for p in $(PLATFORMS) ; do \
